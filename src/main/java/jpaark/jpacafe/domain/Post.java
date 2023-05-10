@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,8 +28,8 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member; // 작성자
+    @JoinColumn(name = "user_id")
+    private User user; // 작성자
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -46,4 +45,21 @@ public class Post {
     private int viewCount; // 조회수
 
     private LocalDateTime dateTime; // 작성일
+
+
+    // 연관관계 매핑
+    public void setMember(User user) { // 이 클래스의 매니 투 원
+        this.user = user;
+        user.getPosts().add(this);
+    }
+
+    public void setCategory(Category category) { // 이 클래스의 매니 투 원
+        this.category = category;
+        category.getPosts().add(this);
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
 }

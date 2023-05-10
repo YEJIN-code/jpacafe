@@ -1,17 +1,15 @@
 package jpaark.jpacafe.domain;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;import java.util.List;
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class User {
-    @Id @GeneratedValue
+    @Id
     @Column(name = "user_id")
-    private Long id;
+    private String id;
 
     private String password;
 
@@ -23,7 +21,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Shelf> shelves = new ArrayList<>();
 
-    private String nickname;
 
     private String email;
 
@@ -33,6 +30,30 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<UserSticker> userStickers = new ArrayList<>();
+
+
+    // 연관관계 매핑
+    public void addMember(Member member) {
+        members.add(member);
+        member.setUser(this);
+    }
+
+    public void addShelf(Shelf shelve) {
+        shelves.add(shelve);
+        shelve.setUser(this);
+    }
+
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setUser(this);
+    }
+
+    public void addStickerBook(UserSticker userSticker) {
+        userStickers.add(userSticker);
+        userSticker.setUser(this);
+    }
 }
 
 

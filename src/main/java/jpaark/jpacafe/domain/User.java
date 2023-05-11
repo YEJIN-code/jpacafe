@@ -2,6 +2,7 @@ package jpaark.jpacafe.domain;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;import java.util.List;
 @Entity
@@ -24,7 +25,7 @@ public class User {
 
     private String email;
 
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     //    private profileImg; // 아직 안배움
 
     @OneToMany(mappedBy = "user")
@@ -54,6 +55,8 @@ public class User {
         userStickers.add(userSticker);
         userSticker.setUser(this);
     }
+
+
 }
 
 

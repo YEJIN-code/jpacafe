@@ -1,9 +1,7 @@
 package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.MemberRepository;
-import jpaark.jpacafe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +24,7 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByNickname(member.getNickname());
+        List<Member> findMembers = memberRepository.findListByNickname(member.getNickname());
         if (!findMembers.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
@@ -39,6 +37,6 @@ public class MemberService {
 
     // 개별 멤버 조회
     public Member findOne(String nickname) {
-        return memberRepository.findOne(nickname);
+        return memberRepository.findByNickname(nickname);
     }
 }

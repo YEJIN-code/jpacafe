@@ -1,7 +1,6 @@
 package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,8 +17,12 @@ public class MemberRepository {
         em.persist(member);
     }
 
-    public Member findOne(String nickname) {
+    public Member findByNickname(String nickname) {
         return em.find(Member.class, nickname);
+    }
+
+    public Member findOne(Long id) {
+        return em.find(Member.class, id);
     }
 
     public List<Member> findAll(Long cafe_id) { // 카페 내 모든 멤버 검색
@@ -28,7 +31,7 @@ public class MemberRepository {
                 .getResultList();
     }
 
-    public List<Member> findByNickname(String nickname) {
+    public List<Member> findListByNickname(String nickname) {
         return em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
                 .setParameter("nickname", nickname)
                 .getResultList();

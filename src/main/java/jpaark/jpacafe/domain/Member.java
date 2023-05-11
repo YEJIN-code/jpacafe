@@ -58,6 +58,16 @@ public class Member {
         grade.getMembers().add(this);
     }
 
+    public static Member createMember(String nickname, Cafe cafe) {
+        Member member = new Member();
+        member.setNickname(nickname);
+        member.setCafe(cafe);
+        // Grade를 설정하는 로직을 추가할 수 있습니다.
+        // 예를 들어, 기본 Grade를 설정하거나, 랜덤한 Grade를 할당할 수 있습니다.
+        member.setGrade(member.grade.defaultGrade());
+        return member;
+    }
 
-    
+
+
 }

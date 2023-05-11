@@ -3,6 +3,7 @@ package jpaark.jpacafe.service;
 import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.repository.UserRepository;
 import org.junit.Assert;
@@ -31,7 +32,7 @@ public class MemberServiceTest {
     @Autowired
     MemberRepository memberRepository;
     @Autowired
-    CafeRepository // 여기해야함...
+    CafeRepository cafeRepository;
 
     @Test(expected = IllegalStateException.class)
     public void 중복닉네임_예외() throws Exception {
@@ -55,8 +56,7 @@ public class MemberServiceTest {
         // Given
         Cafe cafe = new Cafe();
         cafe.setName("정통");
-
-
+        cafeRepository.save(cafe); // Cafe 저장
 
         Member member1 = new Member();
         member1.setNickname("aaa");

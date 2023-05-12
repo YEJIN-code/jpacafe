@@ -29,4 +29,41 @@ public class Comment {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-   
+    @GeneratedValue
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment; // 부모 댓글
+
+    @OneToMany(mappedBy = "parentComment")
+    @GeneratedValue
+    private List<Comment> childComments = new ArrayList<>(); // 자식 댓글들
+
+
+    private String content;
+
+    private LocalDateTime date;
+
+    public void setPost(Post post) {
+        this.post = post;
+        if (post != null) {
+            post.getComments().add(this);
+        }
+    }
+
+    // 연관관계 매핑
+    public void setMember(Member member) {
+        this.member = member;
+        if (member != null) {
+            jpaark.jpacafe.domain.Comment comment = this;
+            member.getComments().add(this);
+        }
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
+    }
+
+    public void addChildComment(Comment childComment) {
+        childComments.add(childComment);
+        childComment.setParentComment(this);
+    }
+}

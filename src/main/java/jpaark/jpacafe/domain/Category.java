@@ -37,4 +37,10 @@ public class Category {
         cafe.getCategories().add(this);
     }
 
-    pub
+    public void addPost(Post post) { // 이 클래스의 원 투 매니
+        posts.add(post);
+        post.setCategory(this);
+    }
+
+
+}

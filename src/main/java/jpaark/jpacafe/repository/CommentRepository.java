@@ -18,9 +18,9 @@ public class CommentRepository {
         em.persist(comment);
     }
 
-    public List<Comment> findByParentComment(Comment parentComment) {
+//    public List<Comment> findByParentComment(Comment parentComment) {
+//
+//    }
 
-    }
-
-
+    
 }

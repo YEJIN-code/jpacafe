@@ -1,6 +1,6 @@
 package jpaark.jpacafe.domain;
 
-import jpaark.jpacafe.domain.Status.MemberGrade;
+import jpaark.jpacafe.domain.Status.StatusSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,4 +20,62 @@ public class Cafe {
     private List<Member> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "cafe") // 카페에 게시판 리스트가 꽂힘
-    private List<Category> c
+    private List<Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cafe")
+    private List<Sticker> stickers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cafe")
+    private List<Grade> grades = new ArrayList<>();
+
+    @Column(unique = true)
+    private String name;
+
+    private String Info;
+
+    private int mileageRate;
+
+//    icon;
+
+
+    // 연관관계 설정
+    public void addMember(Member member) {
+        members.add(member);
+        member.setCafe(this);
+    }
+
+    public void addCategory(Category category) {
+        categories.add(category);
+        category.setCafe(this);
+    }
+
+    public void addSticker(Sticker sticker) {
+        stickers.add(sticker);
+        sticker.setCafe(this);
+    }
+
+    public void addGrade(Grade grade) {
+        grades.add(grade);
+        grade.setCafe(this);
+    }
+
+    // == 생성 메서드 == //
+    public static Cafe createCafe(String name, String info, int mileageRate) {
+        Cafe cafe = new Cafe();
+        cafe.setName(name);
+        cafe.setInfo(info);
+        cafe.setMileageRate(mileageRate);
+        return cafe;
+    }
+
+    /**
+     * 카페 삭제
+     */
+    public void isCanDelete(Member member) {
+        // 카페 삭제 권한이 없으면 삭제 불가
+        if (member.getGrade().getCafePermission() != StatusSet.ON) {
+            throw new IllegalStateException("카페 매니저가 아니면 삭제할 수 없습니다.");
+        }
+
+    }
+}

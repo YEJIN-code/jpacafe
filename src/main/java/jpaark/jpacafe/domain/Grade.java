@@ -27,3 +27,29 @@ public class Grade {
     private String name;
 
     private StatusSet postPermission;
+
+    private StatusSet categoryPermission;
+
+    private StatusSet cafePermission;
+
+    // 연관관계 메소드
+    public void setCafe(Cafe cafe) {
+        this.cafe = cafe;
+        cafe.getGrades().add(this);
+    }
+
+    public void addMember(Member member) {
+        members.add(member);
+        member.setGrade(this);
+    }
+
+    public Grade defaultGrade() {
+        Grade grade = new Grade();
+        this.name = "일반회원";
+        this.postPermission = StatusSet.OFF;
+        this.categoryPermission = StatusSet.OFF;
+        this.cafePermission = StatusSet.OFF;
+
+        return grade;
+    }
+}

@@ -1,5 +1,6 @@
 package jpaark.jpacafe.domain;
 
+import jpaark.jpacafe.domain.Status.StatusSet;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -68,6 +69,17 @@ public class Member {
         return member;
     }
 
+// == 비즈니스 로직 == /
+    /**
+     * 카페 삭제
+     */
+    public void delete() {
+        if (grade.getCafePermission() == StatusSet.OFF) {
+            throw new IllegalStateException("카페 폐쇄 권한이 없습니다.");
+        }
+
+
+    }
 
 
 }

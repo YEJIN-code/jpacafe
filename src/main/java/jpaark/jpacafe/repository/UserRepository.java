@@ -31,4 +31,6 @@ public class UserRepository {
                 .setParameter("id", id)
                 .getResultList();
     }
+
+
 }

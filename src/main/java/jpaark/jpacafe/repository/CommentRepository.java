@@ -18,9 +18,28 @@ public class CommentRepository {
         em.persist(comment);
     }
 
-//    public List<Comment> findByParentComment(Comment parentComment) {
-//
-//    }
+    public Comment findOne(Long id) {
+        return em.find(Comment.class, id);
+    }
 
-    
+    public List<Comment> findByParentComment(Comment parentComment) {
+        // 부모 댓글과 그 밑의 자식 댓글까지 모두 조회
+        return em.createQuery("SELECT c FROM Comment c LEFT JOIN FETCH c.childComments WHERE c.parentComment IS NULL", Comment.class)
+                .getResultList();
+    }
+
+    // 게시물 id와 일치하는 모든 댓글 조회
+    public List<Comment> findByPostId(Long postId) {
+        return em.createQuery("SELECT c FROM Comment c LEFT JOIN FETCH c.childComments WHERE c.parentComment IS NULL AND c.post.id = :postId", Comment.class)
+                .setParameter("postId", postId)
+                .getResultList();
+    }
+
+    // 멤버 id와 일치하는 모든 댓글 조회
+    public List<Comment> findByMemberId(Long memberId) {
+        return em.createQuery("SELECT c FROM Comment c WHERE c.member.id = :memberId", Comment.class)
+                .setParameter("memberId", memberId)
+                .getResultList();
+    }
+
 }

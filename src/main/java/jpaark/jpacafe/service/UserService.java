@@ -3,11 +3,13 @@ package jpaark.jpacafe.service;
 import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true) // 조회 성능 최적화
@@ -40,5 +42,22 @@ public class UserService {
     public User findOne(String userId) {
         return userRepository.findOne(userId);
     }
+
+    public User login(String loginId, String password) {
+        System.out.println("loginId = " + loginId);
+        System.out.println("password = " + password);
+        Optional<User> optionalUser = findUserByIdAndPassword(loginId, password);
+        return optionalUser.orElse(null);
+    }
+
+    private Optional<User> findUserByIdAndPassword(String loginId, String password) {
+        User user = userRepository.findOne(loginId); // 사용자 조회
+        // 사용자가 존재하고 비밀번호가 일치하는 경우에만 Optional 객체로 반환
+        return Optional.ofNullable(user)
+                .filter(u -> u.getPassword().equals(password));
+    }
+
+
+
 
 }

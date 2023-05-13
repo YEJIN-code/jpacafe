@@ -56,6 +56,9 @@ public class User {
         userSticker.setUser(this);
     }
 
+    public String getPassword() {
+        return password;
+    }
 
 }
 

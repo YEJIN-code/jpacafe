@@ -38,6 +38,11 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cafe_id")
+    private Cafe cafe;
+
+
     private String title; // 제목
 
     private String content; // 본문
@@ -61,5 +66,13 @@ public class Post {
     public void addComment(Comment comment) {
         comments.add(comment);
         comment.setPost(this);
+    }
+
+    // 연관관계 설정 메서드
+    public void setCafe(Cafe cafe) {
+        this.cafe = cafe;
+        if (cafe != null) {
+            cafe.getPosts().add(this);
+        }
     }
 }

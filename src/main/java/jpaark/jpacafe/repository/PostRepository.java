@@ -42,4 +42,11 @@ public class PostRepository {
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    // 최신 포스트 가져오기
+    public List<Post> findLatestPosts(int count) {
+        return em.createQuery("select p from Post p order by p.dateTime desc", Post.class)
+                .setMaxResults(count)
+                .getResultList();
+    }
 }

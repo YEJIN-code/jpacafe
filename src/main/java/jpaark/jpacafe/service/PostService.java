@@ -37,4 +37,8 @@ public class PostService {
     public List<Post> findByCategoryId(Long id) {
         return postRepository.findByCategoryId(id);
     }
+
+    public List<Post> findLatestPosts(int count) {
+        return postRepository.findLatestPosts(3);
+    }
 }

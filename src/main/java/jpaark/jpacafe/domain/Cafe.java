@@ -28,6 +28,9 @@ public class Cafe {
     @OneToMany(mappedBy = "cafe")
     private List<Grade> grades = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cafe")
+    private List<Post> posts = new ArrayList<>();
+
     @Column(unique = true)
     private String name;
 
@@ -58,6 +61,16 @@ public class Cafe {
         grades.add(grade);
         grade.setCafe(this);
     }
+    public void addPost(Post post) {
+        posts.add(post);
+        post.setCafe(this);
+    }
+
+    public void removePost(Post post) {
+        posts.remove(post);
+        post.setCafe(null);
+    }
+
 
     // == 생성 메서드 == //
     public static Cafe createCafe(String name, String info, int mileageRate) {
@@ -77,5 +90,11 @@ public class Cafe {
             throw new IllegalStateException("카페 매니저가 아니면 삭제할 수 없습니다.");
         }
 
+    }
+
+
+    public List<Post> getLatestPosts(int count) {
+        int size = Math.min(count, posts.size());
+        return posts.subList(0, size);
     }
 }

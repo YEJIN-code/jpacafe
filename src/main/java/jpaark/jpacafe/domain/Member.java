@@ -77,9 +77,10 @@ public class Member {
         if (grade.getCafePermission() == StatusSet.OFF) {
             throw new IllegalStateException("카페 폐쇄 권한이 없습니다.");
         }
-
-
     }
 
+    public Cafe getCafe() {
+        return cafe;
+    }
 
 }

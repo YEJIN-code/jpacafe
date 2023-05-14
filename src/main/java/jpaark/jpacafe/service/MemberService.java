@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true) // 조회 성능 최적화
@@ -40,4 +41,13 @@ public class MemberService {
         return memberRepository.findByNickname(nickname);
     }
 
+    public Member getMember(Long memberId) {
+        Member member = memberRepository.findOne(memberId);
+        if (member == null) {
+            throw new IllegalArgumentException("Member not found");
+        }
+
+        return member;
+
+    }
 }

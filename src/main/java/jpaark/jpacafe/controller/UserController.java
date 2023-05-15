@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +23,12 @@ public class UserController {
 
     private final UserService userService;
 
-//    @GetMapping("/login")
-//    public String loginForm(@ModelAttribute("loginForm") LoginForm form) {
-//        return "/login/loginForm";
-//    }
+    @GetMapping("/login")
+    public String loginForm(@ModelAttribute("loginForm") LoginForm form, Model model) {
+        model.addAttribute("loginForm", new LoginForm());
+        return "users/loginForm";
+    }
+
 
     @GetMapping("/users/new")
     public String createForm(Model model) {
@@ -38,7 +37,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/users/new")
+    @PostMapping("users/new")
     public String create(@Valid UserForm form, BindingResult result) {
 
         if (result.hasErrors()) {
@@ -55,44 +54,81 @@ public class UserController {
         userService.join(user);
         return "redirect:/";
     }
-//
-//    @GetMapping("/users/login")
-//    public String loginForm(@ModelAttribute("userForm") UserForm form) {
-//        return "users/loginForm";
-//    }
-//
-//    @PostMapping("/users/login")
-//    public String login(@Valid @ModelAttribute UserForm form, BindingResult bindingResult,
-//                          @RequestParam(defaultValue = "/") String redirectURL,
-//                          HttpServletRequest request) {
-//        if (bindingResult.hasErrors()) {
-//            return "users/loginForm";
-//        }
-//
-//        // 성공로직
-//
-//        System.out.println("form = " + form);
-//        User loginUser = userService.login(form.getId(), form.getPassword());
-//        log.info("login? {}", loginUser);
-//
-//        if (loginUser == null) {
-//            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-//            return "users/loginForm";
-//        }
-//
-//        // 로그인 성공 처리
-//        // 세션이 있으면 있는 걸 반환, 없으면 신규 세션 생성
-//        HttpSession session = request.getSession();
-//        // 세션에 로그인 회원 정보 보관
-//        session.setAttribute(SessionConst.LOGIN_MEMBER, loginUser);
-//
-//        return  "redirect:/";
-//    }
-//
-//    private static String expireCookie(HttpServletResponse response, String cookieName) {
-//        Cookie cookie = new Cookie(cookieName, null);
-//        cookie.setMaxAge(0);
-//        response.addCookie(cookie);
-//        return "redirect:/";
-//    }
+
+    @GetMapping("/users/login")
+    public String loginForm(Model model) {
+        model.addAttribute("loginForm", new LoginForm());
+        return "users/loginForm";
+    }
+
+    @PostMapping("/users/login")
+    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/") String redirectURL,
+                        HttpServletRequest request, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "users/loginForm";
+        }
+
+        // 성공로직
+
+        System.out.println("form = " + form);
+        User loginUser = userService.login(form.getLoginId(), form.getPassword());
+        log.info("login? {}", loginUser);
+
+        if (loginUser == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "users/loginForm";
+        }
+
+        // 로그인 성공 처리
+        // 세션이 있으면 있는 걸 반환, 없으면 신규 세션 생성
+        HttpSession session = request.getSession();
+        // 세션에 로그인 회원 정보 보관
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginUser);
+
+        model.addAttribute("user", loginUser);
+
+        return "/users/index"; // 원하는 경로로 변경
+    }
+
+    @GetMapping("/main")
+    public String main() {
+        // main 페이지 로직 처리
+        return "main"; // main 페이지의 뷰 이름을 반환
+    }
+
+
+    private static String expireCookie(HttpServletResponse response, String cookieName) {
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        expireCookie(response, "memberId");
+        return "redirect:/";
+    }
+
+    @GetMapping("/")
+    public String homeLoginV3Spring(
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false)
+            User loginMember,
+            Model model) {
+//세션에 회원 데이터가 없으면 home
+        if (loginMember == null) {
+            return "loginHome";
+        }
+//세션이 유지되면 로그인으로 이동
+        model.addAttribute("user", loginMember);
+        return "/users/index";
+    }
+
+    @GetMapping("users/index")
+    public String index(Model model, User user) {
+        Object user1 = model.getAttribute(user.getId());
+        model.getAttribute(user.)
+    }
+
 }

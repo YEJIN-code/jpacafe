@@ -25,13 +25,13 @@ public class PostController {
     private final PostService postService;
     private final MemberRepository memberRepository;
 
-    @GetMapping("/users/main")
-    public List<Post> getMemberCafePosts(Long memberId) {
-        Member member = memberRepository.findOne(memberId);
-        Cafe cafe = member.getCafe();
-        List<Post> latestPosts = cafe.getLatestPosts(3); // 최신 게시물 3개 가져오기 (가상의 메서드)
-
-        return latestPosts;
-    }
+//    @GetMapping("/users/main")
+//    public List<Post> getMemberCafePosts(Long memberId) {
+//        Member member = memberRepository.findOne(memberId);
+//        Cafe cafe = member.getCafe();
+//        List<Post> latestPosts = cafe.getLatestPosts(3); // 최신 게시물 3개 가져오기 (가상의 메서드)
+//
+//        return latestPosts;
+//    }
 
 }

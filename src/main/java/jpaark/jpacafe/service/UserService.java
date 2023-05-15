@@ -1,14 +1,17 @@
 package jpaark.jpacafe.service;
 
+import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -17,6 +20,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
 
     // 회원 가입
     @Transactional(readOnly = false) // 쓰기에는 readOnly true 이면 안되므로 다시 정의
@@ -44,10 +48,22 @@ public class UserService {
     }
 
     public User login(String loginId, String password) {
-        System.out.println("loginId = " + loginId);
-        System.out.println("password = " + password);
-        Optional<User> optionalUser = findUserByIdAndPassword(loginId, password);
-        return optionalUser.orElse(null);
+        User findUser = userRepository.findOne(loginId);
+        if (findUser != null){
+            return getUser(password, findUser);
+        } else {
+            return null;
+        }
+
+    }
+
+    private static User getUser(String password, User findUser) {
+        boolean equals = findUser.getPassword().equals(password);
+        if (equals == true){
+            return findUser;
+        } else {
+            return null;
+        }
     }
 
     private Optional<User> findUserByIdAndPassword(String loginId, String password) {
@@ -58,6 +74,7 @@ public class UserService {
     }
 
 
-
-
+    private List<Member> findAllMember(String id) {
+        return userRepository.findAllMember(id);
+    }
 }

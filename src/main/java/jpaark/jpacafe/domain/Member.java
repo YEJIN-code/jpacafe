@@ -1,7 +1,10 @@
 package jpaark.jpacafe.domain;
 
 import jpaark.jpacafe.domain.Status.StatusSet;
+import jpaark.jpacafe.repository.CafeRepository;
+import jpaark.jpacafe.repository.UserRepository;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +13,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@RequiredArgsConstructor // final 로 된 걸 생성해줌
 public class Member {
 
     @Id @GeneratedValue
@@ -42,7 +46,6 @@ public class Member {
 
 //    private profileImg
 
-
     // 연관관계 매핑
     public void setUser(User user) { // 이 클래스의 매니 투 원
         this.user = user;
@@ -57,16 +60,6 @@ public class Member {
     public void setGrade(Grade grade) {
         this.grade = grade;
         grade.getMembers().add(this);
-    }
-
-    public static Member createMember(String nickname, Cafe cafe) {
-        Member member = new Member();
-        member.setNickname(nickname);
-        member.setCafe(cafe);
-        // Grade를 설정하는 로직을 추가할 수 있습니다.
-        // 예를 들어, 기본 Grade를 설정하거나, 랜덤한 Grade를 할당할 수 있습니다.
-        member.setGrade(member.grade.defaultGrade());
-        return member;
     }
 
 // == 비즈니스 로직 == /

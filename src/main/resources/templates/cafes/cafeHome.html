@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+  <div class="py-5 text-center">
+    <h2>카페 사이트</h2>
+  </div>
+  <div>
+    <h4>카페 이름</h4>
+    <p th:text="${cafe.name}"></p>
+  </div>
+  <div>
+    <h4>카페 정보</h4>
+    <p th:text="${cafe.info}"></p>
+  </div>
+
+  <div th:if="${not #lists.isEmpty(categories)}">
+    <ul>
+      <li th:each="category : ${categories}">
+        <span th:text="${category.name}"></span>
+      </li>
+    </ul>
+  </div>
+  <div th:unless="${not #lists.isEmpty(categories)}">
+    <!-- 비어있는 경우에 실행될 내용 -->
+    <p>카테고리가 없습니다.</p>
+  </div>
+
+
+  <div th:if="${not #lists.isEmpty(posts)}">
+    <ul>
+      <li th:each="post : ${posts}">
+        <span th:text="${post.title}"></span>
+      </li>
+    </ul>
+  </div>
+  <div th:unless="${not #lists.isEmpty(posts)}">
+    <!-- 비어있는 경우에 실행될 내용 -->
+    <p>게시물이 없습니다.</p>
+  </div>
+
+
+
+
+  <div>
+    <button class="w-100 btn btn-secondary btn-lg" type="button"
+            onclick="location.href='../users/loginHome'">
+      메인으로
+    </button>
+  </div>
+</div>
+</body>
+</html>

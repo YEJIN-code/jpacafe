@@ -81,6 +81,18 @@ public class Cafe {
         return cafe;
     }
 
+
+    public static Member createManager(String nickname, Cafe cafe, User user, Grade grade) {
+        Member member = new Member();
+        member.setNickname(nickname);
+        member.setCafe(cafe);
+        member.setUser(user);
+        member.setGrade(grade);
+
+        return member;
+    }
+
+
     /**
      * 카페 삭제
      */
@@ -89,7 +101,6 @@ public class Cafe {
         if (member.getGrade().getCafePermission() != StatusSet.ON) {
             throw new IllegalStateException("카페 매니저가 아니면 삭제할 수 없습니다.");
         }
-
     }
 
 

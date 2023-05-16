@@ -1,6 +1,9 @@
 package jpaark.jpacafe.controller;
 
+import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.repository.CafeRepository;
+import jpaark.jpacafe.repository.UserRepository;
 import jpaark.jpacafe.service.UserService;
 import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -22,12 +26,20 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final CafeRepository cafeRepository;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form, Model model) {
         model.addAttribute("loginForm", new LoginForm());
         return "users/loginForm";
     }
+
+    @GetMapping("/loginHome")
+    public String loginHome() {
+        return "/users/loginHome";
+    }
+
 
 
     @GetMapping("/users/new")
@@ -88,13 +100,14 @@ public class UserController {
 
         model.addAttribute("user", loginUser);
 
-        return "/users/index"; // 원하는 경로로 변경
-    }
+        List<Member> allMember = userRepository.findAllMember(loginUser.getId());
 
-    @GetMapping("/main")
-    public String main() {
-        // main 페이지 로직 처리
-        return "main"; // main 페이지의 뷰 이름을 반환
+
+
+        model.addAttribute("members", allMember);
+
+
+        return "/users/index"; // 원하는 경로로 변경
     }
 
 
@@ -102,14 +115,15 @@ public class UserController {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-        return "redirect:/";
+        return "redirect:/loginHome";
     }
 
     @PostMapping("/logout")
     public String logout(HttpServletResponse response) {
         expireCookie(response, "memberId");
-        return "redirect:/";
+        return "redirect:/loginHome";
     }
+
 
     @GetMapping("/")
     public String homeLoginV3Spring(
@@ -118,17 +132,11 @@ public class UserController {
             Model model) {
 //세션에 회원 데이터가 없으면 home
         if (loginMember == null) {
-            return "loginHome";
+            return "/users/loginHome";
         }
 //세션이 유지되면 로그인으로 이동
         model.addAttribute("user", loginMember);
         return "/users/index";
-    }
-
-    @GetMapping("users/index")
-    public String index(Model model, User user) {
-        Object user1 = model.getAttribute(user.getId());
-        model.getAttribute(user.)
     }
 
 }

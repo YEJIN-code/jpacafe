@@ -1,9 +1,14 @@
 package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Cafe;
+import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.Status.StatusSet;
+import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.CafeRepository;
+import jpaark.jpacafe.repository.GradeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
+import jpaark.jpacafe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +22,17 @@ import java.util.List;
 public class CafeService {
 
     private final CafeRepository cafeRepository;
+    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final UserRepository userRepository;
+    private final GradeRepository gradeRepository;
 
     // 카페 생성
     @Transactional(readOnly = false)
     public Long join(Cafe cafe) {
         validateDuplicateCafe(cafe);
         cafeRepository.save(cafe);
+
         return cafe.getId();
     }
 
@@ -39,9 +49,36 @@ public class CafeService {
         return cafeRepository.findAll();
     }
 
+    public Cafe findOne(Long cafeId) {
+        return cafeRepository.findOne(cafeId);
+    }
+
     // 카페 이름으로 조회
-    public List<Cafe> findOne(String name) {
+    public List<Cafe> findByName(String name) {
         return cafeRepository.findListByName(name);
+    }
+
+    @Transactional(readOnly = false)
+    public Member createCafe(String userId, Long cafeId, String nickname) {
+        User user = userRepository.findOne(userId);
+        Cafe cafe = cafeRepository.findOne(cafeId);
+
+        Grade grade = new Grade();
+        grade.setCafePermission(StatusSet.ON);
+        grade.setPostPermission(StatusSet.ON);
+        grade.setCategoryPermission(StatusSet.ON);
+        grade.setCafe(cafe);
+        gradeRepository.save(grade);
+
+        Member member = new Member();
+        member.setNickname(nickname);
+        member.setCafe(cafe);
+        member.setGrade(grade);
+        member.setMileage(0);
+        member.setUser(user);
+        memberRepository.save(member);
+
+        return member;
     }
 
 }

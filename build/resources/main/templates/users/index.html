@@ -10,7 +10,8 @@
     <div class="py-5 text-center">
         <h2>홈 화면</h2>
     </div>
-    <h4 class="mb-3" th:text="|로그인: ${user.name}|">로그인 사용자 이름</h4>
+    <h4 class="mb-3" th:text="|${user.name}님 안녕하세요!|">로그인 사용자 이름</h4>
+    오늘 하루를 아카이브해보세요!
     <hr class="my-4">
     <div class="row">
         <!-- 검색어 입력 폼 -->
@@ -19,26 +20,26 @@
             <button type="submit">검색</button>
         </form>
 
-        <div th:if="${user.cafe.name != null}">
-            <h3>카페 정보</h3>
-            <p>카페 이름: <span th:text="${user.cafe.name}"></span></p>
+        <!-- members 리스트가 비어있을 때 -->
+        <div th:if="${#lists.isEmpty(members)}">
+            <p>아직 가입한 아카이브 카페가 없어요.</p>
+            <p>카페에 가입해보세요!</p>
+        </div>
 
-            <h3>최신 포스트</h3>
+        <!-- members 리스트가 비어있지 않을 때 -->
+        <div th:if="${not #lists.isEmpty(members)}">
             <ul>
-                <li th:each="post : ${user.cafe.posts}" th:limit="3">
-                    <span th:text="${post.title}"></span>
+                <li th:each="member : ${members}">
+                    <span th:text="${member.cafe.id}"></span>
                 </li>
             </ul>
         </div>
 
-        <div th:if="${user.cafe == null}">
+        <div th:if="${members == null}">
             <p>회원이 소속된 카페가 없습니다.</p>
         </div>
     </div>
 
-    <div th:if="${user == null}">
-        <p>카페에 가입해보세요!</p>
-    </div>
         <div class="col">
             <form th:action="@{/logout}" method="post">
                 <button class="w-100 btn btn-dark btn-lg" type="submit">
@@ -46,6 +47,14 @@
                 </button>
             </form>
         </div>
+
+    <div class="col">
+        <form th:action="@{/cafes/newCafe}" method="get">
+            <button class="w-100 btn btn-dark btn-lg" type="submit">
+                카페 생성
+            </button>
+        </form>
+    </div>
     </div>
     <hr class="my-4">
 </div> <!-- /container -->
@@ -53,26 +62,3 @@
 </html>
 
 
-
-
-<!--&lt;!&ndash; index.html &ndash;&gt;-->
-
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Main Page</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Main Page</h1>-->
-
-<!--<div th:if="${user != null}">-->
-<!--    <p>Welcome, <span th:text="${user.id}"></span>!</p>-->
-<!--</div>-->
-<!--<div th:unless="${user != null}">-->
-<!--    <p>Welcome, Guest!</p>-->
-<!--</div>-->
-
-<!--&lt;!&ndash; 기타 내용 &ndash;&gt;-->
-<!--</body>-->
-<!--</html>-->

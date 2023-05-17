@@ -1,6 +1,7 @@
 package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Grade;
+import jpaark.jpacafe.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -34,4 +35,11 @@ public class GradeRepository {
                 .setParameter("name", name)
                 .getResultList();
     }
+
+    public List<Grade> findByMemberId(Long memberId) {
+        return em.createQuery("SELECT g FROM Grade g JOIN g.members m WHERE m.id = :memberId", Grade.class)
+                .setParameter("memberId", memberId)
+                .getResultList();
+    }
+
 }

@@ -1,9 +1,13 @@
 package jpaark.jpacafe.controller;
 
+import jpaark.jpacafe.controller.form.LoginForm;
+import jpaark.jpacafe.controller.form.UserForm;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.CafeRepository;
+import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.repository.UserRepository;
+import jpaark.jpacafe.service.MemberService;
 import jpaark.jpacafe.service.UserService;
 import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,8 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final CafeRepository cafeRepository;
+    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form, Model model) {
@@ -136,6 +142,9 @@ public class UserController {
         }
 //세션이 유지되면 로그인으로 이동
         model.addAttribute("user", loginMember);
+
+        List<Member> allMember = userRepository.findAllMember(loginMember.getId());
+        model.addAttribute("members", allMember);
         return "/users/index";
     }
 

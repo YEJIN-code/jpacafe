@@ -37,4 +37,8 @@ public class GradeService {
     public List<Grade> findByName(String name) {
         return gradeRepository.findByName(name);
     }
+
+    public List<Grade> findByMemberId(Long id) {
+        return gradeRepository.findByMemberId(id);
+    }
 }

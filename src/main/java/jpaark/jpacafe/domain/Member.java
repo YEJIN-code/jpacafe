@@ -34,7 +34,7 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Comment> comments = new ArrayList<>();
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String nickname;
 
     private int mileage;

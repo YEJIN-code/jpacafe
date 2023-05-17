@@ -1,4 +1,4 @@
-package jpaark.jpacafe.controller;
+package jpaark.jpacafe.controller.form;
 
 
 import lombok.Data;

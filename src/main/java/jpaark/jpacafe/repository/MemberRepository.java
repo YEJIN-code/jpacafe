@@ -1,9 +1,6 @@
 package jpaark.jpacafe.repository;
 
-import jpaark.jpacafe.domain.Cafe;
-import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -40,6 +37,21 @@ public class MemberRepository {
         return em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
                 .setParameter("nickname", nickname)
                 .getResultList();
+    }
+
+    public List<Member> findByCafeIdAndNickname(Long cafeId, String nickname) {
+        return em.createQuery("select m from Member m where m.cafe.id = :cafeId and m.nickname = :nickname", Member.class)
+                .setParameter("cafeId", cafeId)
+                .setParameter("nickname", nickname)
+                .getResultList();
+    }
+
+    public List<Member> findByCafeIdAndUserId(Long cafeId, String userId) {
+        return em.createQuery("SELECT m FROM Member m JOIN m.user u JOIN m.cafe c WHERE u.id = :userId AND c.id = :cafeId", Member.class)
+                .setParameter("userId", userId)
+                .setParameter("cafeId", cafeId)
+                .getResultList();
+
     }
 
 

@@ -1,7 +1,7 @@
 package jpaark.jpacafe.controller;
 
+import jpaark.jpacafe.controller.form.CafeForm;
 import jpaark.jpacafe.domain.*;
-import jpaark.jpacafe.domain.Status.StatusSet;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.service.*;
@@ -29,6 +29,7 @@ public class CafeController {
     private final GradeService gradeService;
     private final PostService postService;
     private final CategoryService categoryService;
+    private final UserService userService;
 
 
     @GetMapping("/cafes/newCafe")
@@ -50,28 +51,36 @@ public class CafeController {
         model.addAttribute("cafe", cafe);
 
         Member member = cafeService.createCafe(loginMember.getId(), cafe.getId(), form.getNickName());
+        memberService.join(member);
         session.setAttribute("cafe", cafe);
-
         model.addAttribute("member", member);
 
-        return "redirect:/cafeHome";
+        model.addAttribute("user", loginMember);
+
+        return "redirect:/";
     }
 
     @GetMapping("/cafeHome")
     public String cafeHome(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember,
             Model model,
-            HttpSession session) {
-        Cafe cafe = (Cafe) session.getAttribute("cafe");
+            @RequestParam(name = "cafeId") Long cafeId) {
 
-        List<Post> postList = postService.findByCafeId(cafe.getId());
+        Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회
+        List<Post> postList = postService.findByCafeId(cafeId);
         model.addAttribute("cafe", cafe);
         model.addAttribute("posts", postList);
-        List<Cafe> categories = cafeService.findAll(cafe.getId());
+        List<Category> categories = categoryService.findAllByCafeId(cafeId);
         model.addAttribute("categories", categories);
+        model.addAttribute("user", loginMember);
 
-        model.addAttribute("member", loginMember);
+        List<Member> member = memberService.findByCafeIdAndUserId(cafeId, loginMember.getId());
+
+        List<Grade> grades = gradeService.findByMemberId(member.get(0).getId());
+
+        model.addAttribute("grade", grades.get(0));
 
         return "/cafes/cafeHome";
     }
+
 }

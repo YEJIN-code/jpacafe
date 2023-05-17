@@ -2,8 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container" style="max-width: 600px">
@@ -19,7 +18,6 @@
             <input type="text" name="keyword" placeholder="검색어를 입력하세요" />
             <button type="submit">검색</button>
         </form>
-
         <!-- members 리스트가 비어있을 때 -->
         <div th:if="${#lists.isEmpty(members)}">
             <p>아직 가입한 아카이브 카페가 없어요.</p>
@@ -30,23 +28,29 @@
         <div th:if="${not #lists.isEmpty(members)}">
             <ul>
                 <li th:each="member : ${members}">
-                    <span th:text="${member.cafe.id}"></span>
+                    <span th:text="${member.cafe.name}"></span>
+                    <div class="col">
+                        <a th:href="@{/cafeHome(cafeId=${member.cafe.id})}" class="w-100 btn btn-dark btn-lg">
+                            카페 진입
+                        </a>
+                    </div>
                 </li>
             </ul>
         </div>
+
 
         <div th:if="${members == null}">
             <p>회원이 소속된 카페가 없습니다.</p>
         </div>
     </div>
 
-        <div class="col">
-            <form th:action="@{/logout}" method="post">
-                <button class="w-100 btn btn-dark btn-lg" type="submit">
-                    로그아웃
-                </button>
-            </form>
-        </div>
+    <div class="col">
+        <form th:action="@{/logout}" method="post">
+            <button class="w-100 btn btn-dark btn-lg" type="submit">
+                로그아웃
+            </button>
+        </form>
+    </div>
 
     <div class="col">
         <form th:action="@{/cafes/newCafe}" method="get">
@@ -55,10 +59,7 @@
             </button>
         </form>
     </div>
-    </div>
-    <hr class="my-4">
+
 </div> <!-- /container -->
 </body>
 </html>
-
-

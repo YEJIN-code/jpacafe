@@ -1,5 +1,6 @@
 package jpaark.jpacafe.service;
 
+import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.MemberRepository;
@@ -21,17 +22,32 @@ public class MemberService {
     // 카페 멤버 가입
     @Transactional(readOnly = false) // 쓰기에는 readOnly true 이면 안되므로 다시 정의
     public Long join(Member member) {
-        validateDuplicateMember(member); // 중복 유저 검증
+//        validateDuplicateMember(member); // 중복 유저 검증
         memberRepository.save(member);
         return member.getId();
     }
 
-    private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findListByNickname(member.getNickname());
-        if (!findMembers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
-        }
-    }
+//    private void validateDuplicateMember(Member member) {
+//        List<Member> findMembers = memberRepository.findListByNickname(member.getNickname());
+//        if (!findMembers.isEmpty()) {
+//            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+//        }
+//    }
+
+//    // 카페 멤버 가입
+//    @Transactional(readOnly = false) // 쓰기에는 readOnly true 이면 안되므로 다시 정의
+//    public Long join(Member member, Cafe cafe) {
+//        validateDuplicateMember(member, cafe); // 중복 유저 검증
+//        memberRepository.save(member);
+//        return member.getId();
+//    }
+//
+//    private void validateDuplicateMember(Member member, Cafe cafe) {
+//        List<Member> findMembers = memberRepository.findByCafeIdAndNickname(cafe.getId(), member.getNickname());
+//        if (!findMembers.isEmpty()) {
+//            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+//        }
+//    }
 
 
     // 멤버 전체 조회
@@ -51,6 +67,10 @@ public class MemberService {
         }
 
         return member;
+    }
+
+    public List<Member> findByCafeIdAndUserId(Long cafeId, String userId) {
+        return memberRepository.findByCafeIdAndUserId(cafeId, userId);
     }
 
 }

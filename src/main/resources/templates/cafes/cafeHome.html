@@ -44,12 +44,23 @@
     <p>게시물이 없습니다.</p>
   </div>
 
-
+  <div th:unless="${grade.categoryPermission == OFF}">
+    <div class="col">
+      <button class="w-100 btn btn-dark btn-lg"
+              onclick="location.href='newCategory.html?cafeId=${cafe.id}'"
+              type="button">
+        카테고리 생성
+      </button>
+    </div>
+  </div>
+  <div th:if="${grade.categoryPermission == ON}">
+    <p>카테고리 생성권한 없음</p>
+  </div>
 
 
   <div>
     <button class="w-100 btn btn-secondary btn-lg" type="button"
-            onclick="location.href='../users/loginHome'">
+            onclick="location.href='/'">
       메인으로
     </button>
   </div>

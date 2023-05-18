@@ -44,10 +44,20 @@
     <p>게시물이 없습니다.</p>
   </div>
 
+    <div class="col">
+      <button class="w-100 btn btn-dark btn-lg"
+              th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
+              type="button">
+        글쓰기
+      </button>
+    </div>
+
+
+
   <div th:unless="${grade.categoryPermission == OFF}">
     <div class="col">
       <button class="w-100 btn btn-dark btn-lg"
-              onclick="location.href='newCategory.html?cafeId=${cafe.id}'"
+              th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
               type="button">
         카테고리 생성
       </button>

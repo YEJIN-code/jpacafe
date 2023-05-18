@@ -27,20 +27,29 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private CategoryService categoryService;
-    private CafeService cafeService;
+    private final CategoryService categoryService;
+    private final CafeService cafeService;
 
     @GetMapping("/cafes/newCategory")
-    public String newCategory(Model model) {
+    public String newCategory(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
         model.addAttribute("categoryForm", new CategoryForm());
+        session.setAttribute("cafeId", cafeId); // cafeId 값을 세션에 설정
+
         return "cafes/newCategory";
     }
 
+
     @PostMapping("/cafes/newCategory")
     public String createCategory(@Valid CategoryForm form, BindingResult result, Model model,
-                                 @RequestParam(name = "cafeId") Long cafeId,
-            HttpSession session) {
+                                 HttpSession session) {
+        if (result.hasErrors()) {
+            // 유효성 검사 실패 시 처리할 로직 작성
+            return "error";
+        }
+
+        Long cafeId = (Long) session.getAttribute("cafeId"); // 세션에서 cafeId 값을 가져옴
         Cafe cafe = cafeService.findOne(cafeId);
+
 
         Category category = new Category();
         category.setCafe(cafe);
@@ -48,6 +57,7 @@ public class CategoryController {
         categoryService.join(category);
         model.addAttribute("category", category);
 
-        return "redirect:/";
+        return "redirect:/cafeHome?cafeId="+cafeId;
     }
+
 }

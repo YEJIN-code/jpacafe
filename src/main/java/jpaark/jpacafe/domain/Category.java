@@ -23,7 +23,6 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Post> posts = new ArrayList<>();
 
-    @Column(unique = true)
     private String name;
 
     private int total;

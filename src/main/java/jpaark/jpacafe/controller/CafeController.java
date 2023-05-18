@@ -57,6 +57,9 @@ public class CafeController {
 
         model.addAttribute("user", loginMember);
 
+        model.addAttribute("cafeId", cafe.getId()); // cafeId를 모델에 추가
+
+
         return "redirect:/";
     }
 

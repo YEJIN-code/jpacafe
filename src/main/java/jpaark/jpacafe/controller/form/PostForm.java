@@ -10,4 +10,5 @@ public class PostForm {
     private String title;
     @NotBlank(message = "본문을 작성해주세요.")
     private String content;
+    private String category;
 }

@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,6 +49,11 @@ public class Post {
     private int viewCount; // 조회수
 
     private LocalDateTime dateTime; // 작성일
+
+    @PrePersist
+    public void setDateTime() {
+        this.dateTime = LocalDateTime.now(); // 현재 시간으로 설정
+    }
 
 
     // 연관관계 매핑

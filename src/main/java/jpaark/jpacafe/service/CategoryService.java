@@ -41,4 +41,8 @@ public class CategoryService {
     public List<Category> findAllByCafeId(Long cafeId) {
         return categoryRepository.findByCafeId(cafeId);
     }
+
+    public List<Category> findByName(String name) {
+        return categoryRepository.findByName((name));
+    }
 }

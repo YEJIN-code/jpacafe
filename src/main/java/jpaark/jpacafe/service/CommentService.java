@@ -1,7 +1,6 @@
 package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Comment;
-import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

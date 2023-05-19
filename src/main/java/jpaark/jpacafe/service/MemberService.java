@@ -1,16 +1,15 @@
 package jpaark.jpacafe.service;
 
-import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true) // 조회 성능 최적화
 @RequiredArgsConstructor // final 로 된 걸 생성해줌
@@ -70,7 +69,9 @@ public class MemberService {
     }
 
     public List<Member> findByCafeIdAndUserId(Long cafeId, String userId) {
+        log.info("findByCafeIdAndUserId - cafeId: {}, userId: {}", cafeId, userId); // 로그 추가
         return memberRepository.findByCafeIdAndUserId(cafeId, userId);
     }
+
 
 }

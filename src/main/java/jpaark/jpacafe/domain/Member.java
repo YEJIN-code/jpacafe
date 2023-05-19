@@ -1,8 +1,6 @@
 package jpaark.jpacafe.domain;
 
 import jpaark.jpacafe.domain.Status.StatusSet;
-import jpaark.jpacafe.repository.CafeRepository;
-import jpaark.jpacafe.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

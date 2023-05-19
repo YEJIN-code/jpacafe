@@ -1,6 +1,5 @@
 package jpaark.jpacafe.repository;
 
-import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.User;
 import lombok.RequiredArgsConstructor;

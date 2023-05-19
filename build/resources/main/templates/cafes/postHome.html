@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Post Details</title>
 </head>
 <body>
+<h1>Post Details</h1>
+
+<h2>Post ID: <span th:text="${post.id}"></span></h2>
+<h2>Category: <span th:text="${post.category.name}"></span></h2>
+<h2>Title: <span th:text="${post.title}"></span></h2>
+<h2>content: <span th:text="${post.content}"></span></h2>
+<h2>View Count: <span th:text="${post.viewCount}"></span></h2>
+<h2>Date: <span th:text="${post.dateTime}"></span></h2>
+
+<h2>Member: <span th:text="${member.nickName}"></span></h2>
+
 
 </body>
 </html>

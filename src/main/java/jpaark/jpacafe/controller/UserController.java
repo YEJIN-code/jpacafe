@@ -108,10 +108,9 @@ public class UserController {
 
         List<Member> allMember = userRepository.findAllMember(loginUser.getId());
 
-
-
         model.addAttribute("members", allMember);
 
+        log.info("Session created: {}", session.getId());
 
         return "/users/index"; // 원하는 경로로 변경
     }

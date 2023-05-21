@@ -70,6 +70,8 @@ public class MemberService {
 
     public List<Member> findByCafeIdAndUserId(Long cafeId, String userId) {
         log.info("findByCafeIdAndUserId - cafeId: {}, userId: {}", cafeId, userId); // 로그 추가
+        log.info("findByCafeIdAndUserId - members size: {}", (memberRepository.findByCafeIdAndUserId(cafeId, userId)).size()); // 로그 추가
+
         return memberRepository.findByCafeIdAndUserId(cafeId, userId);
     }
 

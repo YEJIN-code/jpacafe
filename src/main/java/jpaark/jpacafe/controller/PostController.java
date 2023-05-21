@@ -28,24 +28,17 @@ public class PostController {
     private final MemberService memberService;
     private final UserService userService;
 
-//    @GetMapping("/users/main")
-//    public List<Post> getMemberCafePosts(Long memberId) {
-//        Member member = memberRepository.findOne(memberId);
-//        Cafe cafe = member.getCafe();
-//        List<Post> latestPosts = cafe.getLatestPosts(3); // 최신 게시물 3개 가져오기 (가상의 메서드)
-//
-//        return latestPosts;
-//    }
-
     @GetMapping("/cafes/newPost")
     public String newPost(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
         model.addAttribute("postForm", new PostForm());
         session.setAttribute("cafeId", cafeId); // cafeId 값을 세션에 설정
+        log.info("hello? cafeId: {}", cafeId); // 로그 추가
         List<Category> categories = categoryService.findAllByCafeId(cafeId);
         model.addAttribute("categories", categories);
 
         return "cafes/newPost";
     }
+
 
     @PostMapping("/cafes/newPost")
     public String createPost(@Valid PostForm form, BindingResult result, Model model,
@@ -67,36 +60,51 @@ public class PostController {
         post.setCategory(categories.get(0));
         post.setComments(null);
         post.setDateTime();
+        post.setUser(loginMember);
         postService.join(post);
 
         User user = userService.findOne(loginMember.getId());
-        log.info("cafeId: {}, userId: {}", cafeId, user.getId()); // 로그 추가
+        log.info("hello? cafeId: {}, userId: {}", cafeId, user.getId()); // 로그 추가
         List<Member> members = memberService.findByCafeIdAndUserId(cafeId, user.getId());
-
-
 
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);
         model.addAttribute("member", members.get(0));
 
+        session.setAttribute("postId", post.getId()); // postId 값을 세션에 설정
+
         return "redirect:/cafes/postHome";
     }
 
-
     @GetMapping("/cafes/postHome")
-    public String postHome(Model model,
-                           @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember) {
-        Long cafeId = (Long) model.getAttribute("cafeId");
-        Post post = (Post) model.getAttribute("post");
+    public String postHome(Model model, HttpSession session) {
+        Long cafeId = (Long) session.getAttribute("cafeId");
+        Long postId = (Long) session.getAttribute("postId");
+        session.removeAttribute("cafeId"); // 세션에서 cafeId 제거
+        session.removeAttribute("postId"); // 세션에서 postId 제거
 
-        String userId = loginMember.getId();
-        List<Member> members = memberService.findByCafeIdAndUserId(cafeId, userId); // 멤버 정보가 있으면 담아옴
+        log.info("hello? cafeId: {}", cafeId);
+        Post post = postService.findOne(postId);
+        User loginMember = (User) session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        if (loginMember != null) {
+            String userId = loginMember.getId();
+            log.info("hello? userId: {}", userId);
+            List<Member> members = memberService.findByCafeIdAndUserId(cafeId, userId);
+            Member member = members.get(0);
+            log.info("hello? findByCafeIdAndUserId - members size: {}", members.size());
+
+            model.addAttribute("memberNickname", member.getNickname());
+        } else {
+            // 로그인 정보가 없는 경우에 대한 처리
+        }
+
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);
-        model.addAttribute("member", members.get(0)); // 멤버 정보
 
         return "cafes/postHome";
     }
 
+    // 다른 메서드와 필드 생략...
 
 }

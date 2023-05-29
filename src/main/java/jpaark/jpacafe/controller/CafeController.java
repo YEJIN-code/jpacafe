@@ -2,12 +2,14 @@ package jpaark.jpacafe.controller;
 
 import jpaark.jpacafe.controller.form.CafeForm;
 import jpaark.jpacafe.domain.*;
+import jpaark.jpacafe.domain.Status.StatusSet;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.service.*;
 import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,9 +52,32 @@ public class CafeController {
         cafeService.join(cafe);
         model.addAttribute("cafe", cafe);
 
-        Member member = cafeService.createCafe(loginMember.getId(), cafe.getId(), form.getNickName());
+        log.info("createCafe loginMember id = {}", loginMember.getId());
+
+        Grade normalGrade = new Grade();
+        normalGrade.setName("normal");
+        normalGrade.setCafe(cafe);
+        normalGrade.setCafePermission(StatusSet.OFF);
+        normalGrade.setCategoryPermission(StatusSet.OFF);
+        normalGrade.setPostPermission(StatusSet.OFF);
+        gradeService.join(normalGrade);
+
+        Grade managerGrade = new Grade();
+        managerGrade.setName("manager");
+        managerGrade.setCafe(cafe);
+        managerGrade.setCafePermission(StatusSet.ON);
+        managerGrade.setCategoryPermission(StatusSet.ON);
+        managerGrade.setPostPermission(StatusSet.ON);
+        gradeService.join(managerGrade);
+
+        Member member = new Member();
+        member.setUser(loginMember);
+        log.info("member.setUser(loginMember) result = {}", member.getUser());
+        member.setCafe(cafe);
+        member.setGrade(managerGrade);
+        member.setNickname(form.getNickName());
         memberService.join(member);
-        session.setAttribute("cafe", cafe);
+
         model.addAttribute("member", member);
 
         model.addAttribute("user", loginMember);
@@ -60,14 +85,17 @@ public class CafeController {
         model.addAttribute("cafeId", cafe.getId()); // cafeId를 모델에 추가
 
 
-        return "redirect:/";
+        return "redirect:/cafeHome?cafeId=" + cafe.getId();
+
     }
 
     @GetMapping("/cafeHome")
     public String cafeHome(
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember,
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginUser,
             Model model,
             @RequestParam(name = "cafeId") Long cafeId) {
+        log.info("cafeHome? cafeId: {}", cafeId); // 로그 추가
+        log.info("cafeHome? loginUser: {}", loginUser); // 로그 추가
 
         Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회
         List<Post> postList = postService.findByCafeId(cafeId);
@@ -75,15 +103,32 @@ public class CafeController {
         model.addAttribute("posts", postList);
         List<Category> categories = categoryService.findAllByCafeId(cafeId);
         model.addAttribute("categories", categories);
-        model.addAttribute("user", loginMember);
+        model.addAttribute("user", loginUser);
 
-        List<Member> member = memberService.findByCafeIdAndUserId(cafeId, loginMember.getId());
+        List<Member> memberList = memberService.findByCafeIdAndUserId(cafeId, loginUser.getId());
+        if (!memberList.isEmpty()) {
+            model.addAttribute("member", memberList.get(0)); // 멤버 정보 보내줌
+            List<Grade> grades = gradeService.findByMemberId(memberList.get(0).getId()); // 등급 정보 불러옴
+            model.addAttribute("grade", grades.get(0)); // 등급도 보내줌
+        } else {
+            model.addAttribute("member", null); // null 을 보내줌
+            Grade guest = new Grade();
+            guest.setCafePermission(StatusSet.OFF);
+            guest.setCategoryPermission(StatusSet.OFF);
+            guest.setPostPermission(StatusSet.OFF);
+            model.addAttribute("grade", guest); // 등급은 게스트로 보내줌
+        }
 
-        List<Grade> grades = gradeService.findByMemberId(member.get(0).getId());
-
-        model.addAttribute("grade", grades.get(0));
-
-        return "/cafes/cafeHome";
+        return "cafes/cafeHome";
     }
+
+    @GetMapping("/search")
+    public String searchFunction(@RequestParam(name = "keyword") String keyword,
+                                 Model model) {
+        List<Cafe> cafeList = cafeService.searchCafe(keyword);
+        model.addAttribute("cafe", cafeList);
+        return "cafes/search";
+    }
+
 
 }

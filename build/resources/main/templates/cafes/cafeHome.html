@@ -19,6 +19,18 @@
     <p th:text="${cafe.info}"></p>
   </div>
 
+  <div th:if="${member == null}">
+    <div class="col">
+      <button class="w-100 btn btn-dark btn-lg"
+              th:onclick="|location.href='/cafes/join?cafeId=${cafe.id}'|"
+              type="button">
+        가입하기
+      </button>
+
+    </div>
+  </div>
+
+
   <div th:if="${not #lists.isEmpty(categories)}">
     <ul>
       <li th:each="category : ${categories}">
@@ -51,7 +63,6 @@
         글쓰기
       </button>
     </div>
-
 
 
   <div th:unless="${grade.categoryPermission == OFF}">

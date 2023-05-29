@@ -1,6 +1,8 @@
 package jpaark.jpacafe.domain;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;import java.util.List;
@@ -15,7 +17,7 @@ public class User {
 
     private String name;
 
-    @OneToMany(mappedBy = "user") // 일대다 관계이고 관계의 주인은 아님
+    @OneToMany(mappedBy = "user",  fetch = FetchType.EAGER) // 일대다 관계이고 관계의 주인은 아님
     private List<Member> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")

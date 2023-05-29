@@ -1,6 +1,7 @@
 package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.User;
 import jpaark.jpacafe.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

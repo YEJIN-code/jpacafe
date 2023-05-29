@@ -23,7 +23,6 @@ public class Grade {
     @OneToMany(mappedBy = "grade")
     private List<Member> members = new ArrayList<>();
 
-    @Column(unique = true)
     private String name;
 
     private StatusSet postPermission;
@@ -43,13 +42,4 @@ public class Grade {
         member.setGrade(this);
     }
 
-    public Grade defaultGrade() {
-        Grade grade = new Grade();
-        this.name = "일반회원";
-        this.postPermission = StatusSet.OFF;
-        this.categoryPermission = StatusSet.OFF;
-        this.cafePermission = StatusSet.OFF;
-
-        return grade;
-    }
 }

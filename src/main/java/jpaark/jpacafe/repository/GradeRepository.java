@@ -2,6 +2,7 @@ package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.Status.StatusSet;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -41,5 +42,22 @@ public class GradeRepository {
                 .setParameter("memberId", memberId)
                 .getResultList();
     }
+
+
+    public List<Grade> findNormalGradesByCafeId(Long cafeId) {
+
+        String jpql = "SELECT g FROM Grade g " +
+                "WHERE g.cafe.id = :cafeId AND " +
+                "g.postPermission = 0 AND " +
+                "g.categoryPermission = 0 AND " +
+                "g.cafePermission = 0";
+
+        List<Grade> grades = em.createQuery(jpql, Grade.class)
+                .setParameter("cafeId", cafeId)
+                .getResultList();
+
+        return grades;
+    }
+
 
 }

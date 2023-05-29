@@ -90,10 +90,10 @@ public class UserController {
         // 성공로직
 
         System.out.println("form = " + form);
-        User loginUser = userService.login(form.getLoginId(), form.getPassword());
-        log.info("login? {}", loginUser);
+        User loginMember = userService.login(form.getLoginId(), form.getPassword());
+        log.info("login? {}", loginMember);
 
-        if (loginUser == null) {
+        if (loginMember == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "users/loginForm";
         }
@@ -102,11 +102,11 @@ public class UserController {
         // 세션이 있으면 있는 걸 반환, 없으면 신규 세션 생성
         HttpSession session = request.getSession();
         // 세션에 로그인 회원 정보 보관
-        session.setAttribute(SessionConst.LOGIN_MEMBER, loginUser);
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
-        model.addAttribute("user", loginUser);
+        model.addAttribute("user", loginMember);
 
-        List<Member> allMember = userRepository.findAllMember(loginUser.getId());
+        List<Member> allMember = userRepository.findAllMember(loginMember.getId());
 
         model.addAttribute("members", allMember);
 
@@ -115,18 +115,14 @@ public class UserController {
         return "/users/index"; // 원하는 경로로 변경
     }
 
-
-    private static String expireCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-        return "redirect:/loginHome";
-    }
-
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
-        expireCookie(response, "memberId");
-        return "redirect:/loginHome";
+    public String logout(HttpServletRequest request) {
+        //세션을 삭제한다.
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/";
     }
 
 

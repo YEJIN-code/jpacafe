@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div>
+    <button class="btn btn-dark btn-lg"
+            onclick="location.href='cafeHome.html'"
+            th:onclick="|location.href='@{/}'|" >홈으로</button>
+  </div>
+
+  <div>
+    <form th:action="@{/search}" method="get">
+      <input type="text" name="keyword" placeholder="검색어를 입력하세요" />
+      <button type="submit" class="btn btn-dark btn-lg">검색</button>
+    </form>
+  </div>
+  &ensp;
+  <h4>검색 결과</h4>
+
+  <table>
+    <tr th:each = "cafe : ${cafe}">
+        <td th:text ="${cafe.name}"></td>
+        <td th:text = "${cafe.info}"></td>
+        <td>
+          <a th:href="@{/cafeHome(cafeId=${cafe.id})}" class="btn btn-dark btn-lg">
+            카페 진입
+          </a>
+        </td>
+    </tr>
+  </table>
+<!--  <form th:action="@{/profile}" method="get">-->
+<!--    <input type="hidden" name="loginId" th:value="${user.id}" />-->
+<!--    <button class="btn btn-dark btn-lg" type="submit">-->
+<!--        프로필-->
+<!--    </button>-->
+<!--  </form>-->
+
+</body>
+</html>

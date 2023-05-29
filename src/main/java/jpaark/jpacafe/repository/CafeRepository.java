@@ -40,4 +40,10 @@ public class CafeRepository {
                 .getResultList();
     }
 
+    public List<Cafe> searchCafe(String keyword) {
+        return em.createQuery("SELECT c FROM Cafe c WHERE c.name LIKE CONCAT('%', :keyword, '%')", Cafe.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
+    }
+
 }

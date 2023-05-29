@@ -80,4 +80,7 @@ public class CafeService {
         return member;
     }
 
+    public List<Cafe> searchCafe(String keyword) {
+        return cafeRepository.searchCafe(keyword);
+    }
 }

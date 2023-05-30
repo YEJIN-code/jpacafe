@@ -4,39 +4,131 @@
   <meta charset="utf-8">
   <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <div>
-    <button class="btn btn-dark btn-lg"
-            onclick="location.href='cafeHome.html'"
-            th:onclick="|location.href='@{/}'|" >홈으로</button>
-  </div>
 
-  <div>
+<style>
+  .top {
+    height: 100px;
+    position: relative;
+  }
+  .search {
+    margin-left: 20px;
+    margin-top: 15px;
+    height: 30px;
+    width: 50%;
+    float: left;
+  }
+  .main {
+    width: 20%;
+    height: 50px;
+    margin-right: 20px;
+    margin-top: 15px;
+    float: right;
+  }
+  .content {
+    height: 700px;
+  }
+  .tab {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .h {
+    margin-left: 20px;
+  }
+  .btn-search {
+    background-color: black;
+    color: white;
+    float: right;
+    width: 20%;
+    height: 30px;
+    border: 0;
+    border-radius: 5px;
+  }
+  .btn-home {
+    background-color: black;
+    color: white;
+    float: right;
+    width: 50%;
+    height: 30px;
+    border: 0;
+    border-radius: 5px;
+  }
+  .input-keyword {
+    width: 70%;
+    height: 30px;
+    font-size: 10px;
+    border: 0;
+    border-radius: 5px;
+    outline: none;
+    padding-left: 10px;
+    background-color: rgb(233, 233, 233);
+  }
+  table.td-cafe {
+    border-collapse: separate;
+    border-spacing: 1px;
+    text-align: left;
+    line-height: 1.5;
+    margin : 20px 10px;
+    border-top: 1px solid #ccc;
+    font-size: medium;
+  }
+  table.td-cafe th {
+    width: 150px;
+    padding: 10px;
+    font-weight: bold;
+    vertical-align: top;
+    font-size: medium;
+    border-bottom: 1px solid #ccc;
+  }
+  table.td-cafe td {
+    width: 350px;
+    padding: 10px;
+    vertical-align: top;
+    font-size: medium;
+    border-bottom: 1px solid #ccc;
+  }
+</style>
+
+<body>
+<div class="top">
+  <div class="search">
     <form th:action="@{/search}" method="get">
-      <input type="text" name="keyword" placeholder="검색어를 입력하세요" />
-      <button type="submit" class="btn btn-dark btn-lg">검색</button>
+      <input type="text" class="input-keyword" name="keyword" placeholder="검색어를 입력하세요" />
+      <button type="submit" class="btn-search">검색</button>
     </form>
   </div>
-  &ensp;
-  <h4>검색 결과</h4>
 
-  <table>
-    <tr th:each = "cafe : ${cafe}">
-        <td th:text ="${cafe.name}"></td>
-        <td th:text = "${cafe.info}"></td>
+  <div class="main">
+    <button
+            class="btn-home"
+            onclick="location.href='cafeHome.html'"
+            th:onclick="|location.href='@{/}'|"
+    >
+      홈으로
+    </button>
+  </div>
+</div>
+&ensp;
+<div class="content">
+  <div class="h">
+    <h4>검색어에 대한 검색 결과입니다.</h4>
+  </div>
+  <div class="tab">
+    <table class="td-cafe">
+      <tr th:each="cafe : ${cafe}">
+        <th scope="row" th:text="${cafe.name}"></th>
+        <td th:text="${cafe.info}"></td>
         <td>
-          <a th:href="@{/cafeHome(cafeId=${cafe.id})}" class="btn btn-dark btn-lg">
+          <a
+                  th:href="@{/cafeHome(cafeId=${cafe.id})}"
+                  class="w-100 btn btn-dark btn-lg"
+          >
             카페 진입
           </a>
         </td>
-    </tr>
-  </table>
-<!--  <form th:action="@{/profile}" method="get">-->
-<!--    <input type="hidden" name="loginId" th:value="${user.id}" />-->
-<!--    <button class="btn btn-dark btn-lg" type="submit">-->
-<!--        프로필-->
-<!--    </button>-->
-<!--  </form>-->
+      </tr>
+    </table>
+  </div>
+</div>
 
 </body>
 </html>

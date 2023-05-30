@@ -70,22 +70,22 @@ public class PostController {
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);
         model.addAttribute("member", members.get(0));
+        model.addAttribute("postId", post.getId());
 
         session.setAttribute("postId", post.getId()); // postId 값을 세션에 설정
 
-        return "redirect:/cafes/postHome";
+        return "redirect:/cafes/" + post.getId() + "/postHome?cafeId=" + cafeId;
+
+
     }
 
-    @GetMapping("/cafes/postHome")
-    public String postHome(Model model, HttpSession session) {
-        Long cafeId = (Long) session.getAttribute("cafeId");
-        Long postId = (Long) session.getAttribute("postId");
-        session.removeAttribute("cafeId"); // 세션에서 cafeId 제거
-        session.removeAttribute("postId"); // 세션에서 postId 제거
+    @GetMapping("/cafes/{postId}/postHome")
+    public String postHome(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember,
+                           @PathVariable Long postId,  @RequestParam Long cafeId,
+                           Model model, HttpSession session) {
 
         log.info("hello? cafeId: {}", cafeId);
         Post post = postService.findOne(postId);
-        User loginMember = (User) session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         if (loginMember != null) {
             String userId = loginMember.getId();

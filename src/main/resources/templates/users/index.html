@@ -115,7 +115,6 @@
 </style>
 
 <body>
-<div class="container" style="max-width: 600px;">
     <div class="top">
         <div class="py-5 text-center">
             <h2>홈 화면</h2>
@@ -185,7 +184,7 @@
         <div class="main" th:if="${not #lists.isEmpty(members)}">
             <table>
                 <tr th:each="member : ${members}">
-                    <td th:text="${member.cafe.name}"></td>
+                    <th scope="row" th:text="${member.cafe.name}"></th>
                     <td>
                         <a
                                 th:href="@{/cafeHome(cafeId=${member.cafe.id})}"
@@ -202,7 +201,6 @@
             <p>회원이 소속된 카페가 없습니다.</p>
         </div>
     </div>
-</div>
 <!-- /container -->
 </body>
 </html>

@@ -43,18 +43,33 @@
     <p>카테고리가 없습니다.</p>
   </div>
 
+  <div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>작성일자</th>
+        <th>열람</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="post : ${posts}">
+        <td th:text="${post.title}"></td>
+        <td th:text="${post.user.name}"></td>
+        <td th:text="${post.dateTime}"></td>
+        <td>
+          <a href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}"
+          class="btn btn-primary" role="button">열람</a>
 
-  <div th:if="${not #lists.isEmpty(posts)}">
-    <ul>
-      <li th:each="post : ${posts}">
-        <span th:text="${post.title}"></span>
-      </li>
-    </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-  <div th:unless="${not #lists.isEmpty(posts)}">
-    <!-- 비어있는 경우에 실행될 내용 -->
-    <p>게시물이 없습니다.</p>
-  </div>
+
+
 
     <div class="col">
       <button class="w-100 btn btn-dark btn-lg"

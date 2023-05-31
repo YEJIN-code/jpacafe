@@ -1,10 +1,10 @@
 package jpaark.jpacafe.controller;
 
 import jpaark.jpacafe.controller.form.CategoryForm;
-import jpaark.jpacafe.domain.Cafe;
-import jpaark.jpacafe.domain.Category;
-import jpaark.jpacafe.service.CafeService;
-import jpaark.jpacafe.service.CategoryService;
+import jpaark.jpacafe.domain.*;
+import jpaark.jpacafe.domain.Status.StatusSet;
+import jpaark.jpacafe.service.*;
+import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -13,9 +13,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -24,6 +26,9 @@ public class CategoryController {
 
     private final CategoryService categoryService;
     private final CafeService cafeService;
+    private final PostService postService;
+    private final MemberService memberService;
+    private final GradeService gradeService;
 
     @GetMapping("/cafes/newCategory")
     public String newCategory(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
@@ -54,5 +59,38 @@ public class CategoryController {
 
         return "redirect:/cafeHome?cafeId="+cafeId;
     }
+
+    @GetMapping("/posts")
+    public String categoryPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginUser,
+                               @RequestParam("categoryId") Long categoryId, @RequestParam("cafeId") Long cafeId,
+                               Model model) {
+        Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회
+
+        List<Post> postList = postService.findByCategoryId(categoryId);
+        model.addAttribute("cafe", cafe);
+        model.addAttribute("posts", postList);
+        List<Category> categories = categoryService.findAllByCafeId(cafeId);
+        model.addAttribute("categories", categories);
+        model.addAttribute("user", loginUser);
+        String nowCategory = categoryService.findOne(categoryId).getName();
+        model.addAttribute("nowCategory", nowCategory);
+
+        List<Member> memberList = memberService.findByCafeIdAndUserId(cafeId, loginUser.getId());
+        if (!memberList.isEmpty()) {
+            model.addAttribute("member", memberList.get(0)); // 멤버 정보 보내줌
+            List<Grade> grades = gradeService.findByMemberId(memberList.get(0).getId()); // 등급 정보 불러옴
+            model.addAttribute("grade", grades.get(0)); // 등급도 보내줌
+        } else {
+            model.addAttribute("member", null); // null 을 보내줌
+            Grade guest = new Grade();
+            guest.setCafePermission(StatusSet.OFF);
+            guest.setCategoryPermission(StatusSet.OFF);
+            guest.setPostPermission(StatusSet.OFF);
+            model.addAttribute("grade", guest); // 등급은 게스트로 보내줌
+        }
+
+        return "cafes/categoryPost"; // 실제로 보여줄 뷰 이름을 반환
+    }
+
 
 }

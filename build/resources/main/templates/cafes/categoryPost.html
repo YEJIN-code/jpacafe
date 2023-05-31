@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+  <div class="py-5 text-center">
+    <h2>카페 사이트</h2>
+  </div>
+  <div>
+    <h4>카페 이름</h4>
+    <p th:text="${cafe.name}"></p>
+  </div>
+  <div>
+    <h4>카페 소개</h4>
+    <p th:text="${cafe.info}"></p>
+  </div>
+
+
+  <div>
+    <h4>현재 카테고리</h4>>
+    <p th:text="${nowCategory}"> </p>
+  </div>
+
+  <div>
+  <span style="cursor: pointer; color: blue;"
+        th:text="전체게시물"
+        th:onclick="|location.href='/cafeHome?cafeId=${cafe.id}'|"
+        onmouseover="changeColor(this, 'red')"
+        onmouseout="changeColor(this, 'black')">
+  </span>
+  </div>
+
+
+
+  <div th:if="${not #lists.isEmpty(categories)}">
+    <ul>
+      <li th:each="category : ${categories}">
+      <span th:text="${category.name}"
+            th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
+            onmouseover="changeColor(this, 'red')"
+            onmouseout="changeColor(this, 'black')">
+      </span>
+
+        <script>
+        function changeColor(element, color) {
+          element.style.color = color;
+        }
+      </script>
+      </li>
+    </ul>
+  </div>
+
+
+  </li>
+  </ul>
+</div>
+
+
+<div th:unless="${not #lists.isEmpty(categories)}">
+  <!-- 비어있는 경우에 실행될 내용 -->
+  <p>카테고리가 없습니다.</p>
+</div>
+
+
+<div>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>작성일자</th>
+      <th>열람</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+      <td th:text="${post.title}"></td>
+      <td th:text="${post.user.name}"></td>
+      <td th:text="${post.dateTime}"></td>
+      <td>
+        <a href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}"
+           class="btn btn-primary" role="button">열람</a>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div th:if="${member == null}">
+  <div class="col">
+    <button class="w-100 btn btn-dark btn-lg"
+            th:onclick="|location.href='/cafes/join?cafeId=${cafe.id}'|"
+            type="button">
+      가입하기
+    </button>
+  </div>
+</div>
+<div th:unless="${member == null}">
+  <div class="col">
+    <button class="w-100 btn btn-dark btn-lg"
+            th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
+            type="button">
+      글쓰기
+    </button>
+  </div>
+  <div th:unless="${grade.categoryPermission == OFF}">
+    <div class="col">
+      <button class="w-100 btn btn-dark btn-lg"
+              th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
+              type="button">
+        카테고리 생성
+      </button>
+    </div>
+  </div>
+  <div th:if="${grade.categoryPermission == ON}">
+    <p>카테고리 생성권한 없음</p>
+  </div>
+</div>
+
+
+<div>
+  <button class="w-100 btn btn-secondary btn-lg" type="button"
+          onclick="location.href='/'">
+    메인으로
+  </button>
+</div>
+</div>
+</body>
+</html>

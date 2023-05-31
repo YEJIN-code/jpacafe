@@ -76,5 +76,7 @@ public class MemberService {
         return memberRepository.findByCafeIdAndUserId(cafeId, userId);
     }
 
-
+    public int deleteMember(Long memberId) {
+        return memberRepository.deleteMember(memberId);
+    }
 }

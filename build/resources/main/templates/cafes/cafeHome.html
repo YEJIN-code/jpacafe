@@ -15,10 +15,11 @@
     <p th:text="${cafe.name}"></p>
   </div>
   <div>
-    <h4>카페 정보</h4>
+    <h4>카페 소개</h4>
     <p th:text="${cafe.info}"></p>
   </div>
 
+  <!--  비회원에게 출력하는 요소-->
   <div th:if="${member == null}">
     <div class="col">
       <button class="w-100 btn btn-dark btn-lg"
@@ -26,51 +27,11 @@
               type="button">
         가입하기
       </button>
-
     </div>
   </div>
 
-
-  <div th:if="${not #lists.isEmpty(categories)}">
-    <ul>
-      <li th:each="category : ${categories}">
-        <span th:text="${category.name}"></span>
-      </li>
-    </ul>
-  </div>
-  <div th:unless="${not #lists.isEmpty(categories)}">
-    <!-- 비어있는 경우에 실행될 내용 -->
-    <p>카테고리가 없습니다.</p>
-  </div>
-
-  <div>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>제목</th>
-        <th>작성자</th>
-        <th>작성일자</th>
-        <th>열람</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="post : ${posts}">
-        <td th:text="${post.title}"></td>
-        <td th:text="${post.user.name}"></td>
-        <td th:text="${post.dateTime}"></td>
-        <td>
-          <a href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}"
-          class="btn btn-primary" role="button">열람</a>
-
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-
-
+  <!--  회원에게 출력하는 요소-->
+  <div th:unless="${member == null}">
     <div class="col">
       <button class="w-100 btn btn-dark btn-lg"
               th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
@@ -78,28 +39,126 @@
         글쓰기
       </button>
     </div>
-
-
-  <div th:unless="${grade.categoryPermission == OFF}">
-    <div class="col">
-      <button class="w-100 btn btn-dark btn-lg"
-              th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
-              type="button">
-        카테고리 생성
-      </button>
+    <div th:unless="${grade.categoryPermission == OFF}">
+      <div class="col">
+        <button class="w-100 btn btn-dark btn-lg"
+                th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
+                type="button">
+          카테고리 생성
+        </button>
+      </div>
     </div>
+    <div th:if="${grade.categoryPermission == ON}">
+      <p>카테고리 생성권한 없음</p>
+    </div>
+
+    <div th:unless="${grade.categoryPermission == OFF}">
+      <div class="col">
+        <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+          <input type="hidden" name="memberId" th:value="${member.id}">
+          <button class="w-100 btn btn-dark btn-lg" type="submit">
+            탈퇴하기
+          </button>
+        </form>
+      </div>
+    </div>
+    <script th:inline="javascript">
+  function confirmDeleteMember(event) {
+    if (!confirm('탈퇴하시겠습니까?')) {
+      event.preventDefault(); // 폼 제출을 막습니다.
+      return false;
+    }
+
+    showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
+    return true;
+  }
+
+  // 탈퇴되었습니다 팝업을 표시하는 함수
+  function showWithdrawalPopup() {
+    alert('탈퇴되었습니다.');
+  }
+</script>
+
   </div>
-  <div th:if="${grade.categoryPermission == ON}">
-    <p>카테고리 생성권한 없음</p>
+
+  <div th:if="${not #lists.isEmpty(categories)}">
+    <ul>
+      <li th:each="category : ${categories}">
+      <span th:text="${category.name}"
+            th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
+            onmouseover="changeColor(this, 'red')"
+            onmouseout="changeColor(this, 'black')">
+      </span>
+
+        <script>
+        function changeColor(element, color) {
+          element.style.color = color;
+        }
+      </script>
+      </li>
+    </ul>
   </div>
 
 
-  <div>
-    <button class="w-100 btn btn-secondary btn-lg" type="button"
-            onclick="location.href='/'">
-      메인으로
-    </button>
-  </div>
+  </li>
+  </ul>
 </div>
+
+
+<div th:unless="${not #lists.isEmpty(categories)}">
+  <!-- 비어있는 경우에 실행될 내용 -->
+  <p>카테고리가 없습니다.</p>
+</div>
+
+
+<div>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>작성일자</th>
+      <th>열람</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+      <td th:text="${post.title}"></td>
+      <td th:text="${post.user.name}"></td>
+      <td th:text="${post.dateTime}"></td>
+      <td>
+        <a 
+           th:if="${member == null}"
+           onclick="showWarning()">열람</a>
+        <a href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}"
+           th:unless="${member == null}">열람</a>
+      </td>
+
+      <script>
+  function showWarning() {
+    alert("회원만 확인할 수 있습니다.");
+  }
+</script>
+
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div>
+  <button class="w-100 btn btn-secondary btn-lg" type="button"
+          onclick="location.href='/'">
+    메인으로
+  </button>
+</div>
+</div>
+
+
+
+
+
 </body>
 </html>

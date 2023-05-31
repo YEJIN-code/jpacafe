@@ -61,22 +61,26 @@ public class PostController {
         post.setComments(null);
         post.setDateTime();
         post.setUser(loginMember);
-        postService.join(post);
+
 
         User user = userService.findOne(loginMember.getId());
-        log.info("hello? cafeId: {}, userId: {}", cafeId, user.getId()); // 로그 추가
+        log.info("createPost cafeId: {}, userId: {}", cafeId, user.getId()); // 로그 추가
         List<Member> members = memberService.findByCafeIdAndUserId(cafeId, user.getId());
+        log.info("createPost members size: {}", members.size());
+        log.info("createPost members.get(0) id: {}", members.get(0).getId());
+
+        post.setWriter(members.get(0).getNickname());
+        log.info("createPost setWriter: {}", members.get(0).getNickname());
+        log.info("createPost DB setWriter: {}", post.getWriter());
 
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);
         model.addAttribute("member", members.get(0));
         model.addAttribute("postId", post.getId());
 
-        session.setAttribute("postId", post.getId()); // postId 값을 세션에 설정
+        postService.join(post);
 
         return "redirect:/cafes/" + post.getId() + "/postHome?cafeId=" + cafeId;
-
-
     }
 
     @GetMapping("/cafes/{postId}/postHome")
@@ -87,11 +91,17 @@ public class PostController {
         log.info("hello? cafeId: {}", cafeId);
         Post post = postService.findOne(postId);
 
+        Member member = new Member();
+
         if (loginMember != null) {
             String userId = loginMember.getId();
             log.info("hello? userId: {}", userId);
             List<Member> members = memberService.findByCafeIdAndUserId(cafeId, userId);
-            Member member = members.get(0);
+            if (members.size()!=0) { // 존재하는 회원
+                member = members.get(0);
+            } else { // 존재하지 않는 회원
+            }
+
             log.info("hello? findByCafeIdAndUserId - members size: {}", members.size());
 
             model.addAttribute("memberNickname", member.getNickname());

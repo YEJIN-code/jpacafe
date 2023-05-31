@@ -50,6 +50,8 @@ public class Post {
 
     private LocalDateTime dateTime; // 작성일
 
+    private String writer; // 작성 멤버 닉네임
+
     @PrePersist
     public void setDateTime() {
         this.dateTime = LocalDateTime.now(); // 현재 시간으로 설정

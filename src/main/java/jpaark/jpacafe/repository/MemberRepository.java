@@ -51,10 +51,12 @@ public class MemberRepository {
                 .setParameter("userId", userId)
                 .setParameter("cafeId", cafeId)
                 .getResultList();
-
     }
 
-
-
+    public int deleteMember(Long memberId) {
+        return em.createQuery("delete from Member m where m.id = :memberId")
+                .setParameter("memberId", memberId)
+                .executeUpdate();
+    }
 
 }

@@ -83,13 +83,20 @@ public class MemberController {
 
 
         model.addAttribute("member", member);
-
         model.addAttribute("user", loginMember);
-
         model.addAttribute("cafeId", cafe.getId()); // cafeId를 모델에 추가
 
-
         return "redirect:/cafeHome?cafeId=" + cafe.getId();
+    }
 
+
+    @PostMapping("/cafes/deleteMember")
+    public String deleteMember(@RequestParam("memberId") Long memberId,
+                          @SessionAttribute(name = "loginMember", required = false) User loginMember) {
+        log.info("memberController? Member id: {}", memberId); // 로그 추가
+        memberService.deleteMember(memberId);
+
+
+        return "redirect:/";
     }
 }

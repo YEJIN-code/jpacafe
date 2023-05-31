@@ -54,6 +54,7 @@ public class CafeController {
 
         log.info("createCafe loginMember id = {}", loginMember.getId());
 
+
         Grade normalGrade = new Grade();
         normalGrade.setName("normal");
         normalGrade.setCafe(cafe);

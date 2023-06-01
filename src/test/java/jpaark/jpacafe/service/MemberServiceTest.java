@@ -2,10 +2,9 @@ package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +35,10 @@ public class MemberServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 중복닉네임_예외() throws Exception {
         // given
-        User user1 = new User();
+        Users user1 = new Users();
         user1.setId("asdf");
 
-        User user2 = new User();
+        Users user2 = new Users();
         user2.setId("asdf");
 
         userService.join(user1);

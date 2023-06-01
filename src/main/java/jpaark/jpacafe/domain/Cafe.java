@@ -82,7 +82,7 @@ public class Cafe {
     }
 
 
-    public static Member createManager(String nickname, Cafe cafe, User user, Grade grade) {
+    public static Member createManager(String nickname, Cafe cafe, Users user, Grade grade) {
         Member member = new Member();
         member.setNickname(nickname);
         member.setCafe(cafe);

@@ -9,7 +9,6 @@ import jpaark.jpacafe.service.*;
 import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,7 +41,7 @@ public class CafeController {
 
     @PostMapping("/cafes/newCafe")
     public String createCafe(
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember,
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginMember,
             @Valid CafeForm form, BindingResult result, Model model,
             HttpSession session) {
 
@@ -92,7 +91,7 @@ public class CafeController {
 
     @GetMapping("/cafeHome")
     public String cafeHome(
-            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginUser,
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
             Model model,
             @RequestParam(name = "cafeId") Long cafeId) {
         log.info("cafeHome? cafeId: {}", cafeId); // 로그 추가

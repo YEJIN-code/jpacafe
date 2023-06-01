@@ -28,7 +28,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user; // 작성자
+    private Users user; // 작성자
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -59,7 +59,7 @@ public class Post {
 
 
     // 연관관계 매핑
-    public void setMember(User user) { // 이 클래스의 매니 투 원
+    public void setMember(Users user) { // 이 클래스의 매니 투 원
         this.user = user;
         user.getPosts().add(this);
     }

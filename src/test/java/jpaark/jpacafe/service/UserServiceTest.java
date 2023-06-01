@@ -1,6 +1,6 @@
 package jpaark.jpacafe.service;
 
-import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class UserServiceTest {
     public void 회원가입() throws Exception {
 
         // give
-        User user = new User();
+        Users user = new Users();
         user.setId("asdf123");
 
         // when
@@ -40,10 +40,10 @@ public class UserServiceTest {
     @Test(expected = IllegalStateException.class)
     public void 중복회원_예외() throws Exception {
         // given
-        User user1 = new User();
+        Users user1 = new Users();
         user1.setId("asdf");
 
-        User user2 = new User();
+        Users user2 = new Users();
         user2.setId("asdf");
 
         userService.join(user1);

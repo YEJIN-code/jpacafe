@@ -128,7 +128,7 @@
       <td th:text="${post.user.name}"></td>
       <td th:text="${post.dateTime}"></td>
       <td>
-        <a 
+        <a
            th:if="${member == null}"
            onclick="showWarning()">열람</a>
         <a href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}"

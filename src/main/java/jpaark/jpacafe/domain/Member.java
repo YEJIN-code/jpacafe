@@ -20,7 +20,7 @@ public class Member {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id") // FK 이름 설정.
-    private User user;
+    private Users user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cafe_id")
@@ -45,7 +45,7 @@ public class Member {
 //    private profileImg
 
     // 연관관계 매핑
-    public void setUser(User user) { // 이 클래스의 매니 투 원
+    public void setUser(Users user) { // 이 클래스의 매니 투 원
         this.user = user;
         user.getMembers().add(this);
     }

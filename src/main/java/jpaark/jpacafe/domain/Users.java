@@ -1,14 +1,13 @@
 package jpaark.jpacafe.domain;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;import java.util.List;
 @Entity
 @Getter @Setter
-public class User {
+public class Users {
     @Id
     @Column(name = "user_id")
     private String id;

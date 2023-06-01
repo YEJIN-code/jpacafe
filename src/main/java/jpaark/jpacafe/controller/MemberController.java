@@ -1,25 +1,20 @@
 package jpaark.jpacafe.controller;
 
-import jpaark.jpacafe.controller.form.CafeForm;
 import jpaark.jpacafe.controller.form.MemberForm;
 import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.Status.StatusSet;
-import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.service.CafeService;
 import jpaark.jpacafe.service.GradeService;
 import jpaark.jpacafe.service.MemberService;
-import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -50,7 +45,7 @@ public class MemberController {
 
     @GetMapping("/cafes/join")
     public String joinCafe(Model model, @RequestParam("cafeId") Long cafeId,
-                           @SessionAttribute(name = "loginMember", required = false) User loginMember) {
+                           @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
         log.info("memberController? cafeId: {}", cafeId); // 로그 추가
         model.addAttribute("memberForm", new MemberForm());
         model.addAttribute("cafeId", cafeId); // 수정된 부분
@@ -62,7 +57,7 @@ public class MemberController {
     public String joinCafe(
             @Valid MemberForm form, BindingResult result, Model model,
             @RequestParam("cafeId") Long cafeId,
-            @SessionAttribute(name = "loginMember", required = false) User loginMember
+            @SessionAttribute(name = "loginMember", required = false) Users loginMember
             ) {
 
         log.info("memberController? cafeId: {}", cafeId); // 로그 추가
@@ -71,7 +66,7 @@ public class MemberController {
         List<Grade> gradeList = gradeService.findNormalGradesByCafeId(cafeId);
         Grade grade = gradeList.get(0);
 
-        User user = loginMember;
+        Users user = loginMember;
         log.info("memberController? loginMember id: {}", user.getId()); // 로그 추가
 
         Member member = new Member();
@@ -92,7 +87,7 @@ public class MemberController {
 
     @PostMapping("/cafes/deleteMember")
     public String deleteMember(@RequestParam("memberId") Long memberId,
-                          @SessionAttribute(name = "loginMember", required = false) User loginMember) {
+                          @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
         log.info("memberController? Member id: {}", memberId); // 로그 추가
         memberService.deleteMember(memberId);
 

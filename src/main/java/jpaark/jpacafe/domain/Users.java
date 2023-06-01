@@ -22,11 +22,11 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private List<Shelf> shelves = new ArrayList<>();
 
-
     private String email;
 
     private LocalDate birthDate;
-    //    private profileImg; // 아직 안배움
+    // private profileImg; // 아직 안함
+
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();

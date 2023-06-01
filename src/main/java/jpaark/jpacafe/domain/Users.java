@@ -27,13 +27,11 @@ public class Users {
     private LocalDate birthDate;
     // private profileImg; // 아직 안함
 
-
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<UserSticker> userStickers = new ArrayList<>();
-
 
     // 연관관계 매핑
     public void addMember(Member member) {

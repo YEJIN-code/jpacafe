@@ -1,5 +1,6 @@
 package jpaark.jpacafe.controller;
 
+import jpaark.jpacafe.controller.form.CommentForm;
 import jpaark.jpacafe.controller.form.PostForm;
 import jpaark.jpacafe.domain.*;
 import jpaark.jpacafe.repository.MemberRepository;
@@ -27,6 +28,7 @@ public class PostController {
     private final CategoryService categoryService;
     private final MemberService memberService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @GetMapping("/cafes/newPost")
     public String newPost(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
@@ -111,6 +113,10 @@ public class PostController {
 
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);
+
+        List<Comment> comments = commentService.findByPostId(postId);
+        model.addAttribute("comments", comments);
+        model.addAttribute("commentForm", new CommentForm());
 
         return "cafes/postHome";
     }

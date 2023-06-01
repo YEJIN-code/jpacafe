@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Post Details</title>
 </head>
+<style>
+    .hidden{
+         display:none;
+    }
+</style>
 <body>
 <h1>Post Details</h1>
 
@@ -17,14 +22,72 @@
 <h2>User Id: <span th:text="${post.user.id}"></span></h2>
 <h2>Member Nickname: <span th:text="${post.writer}"></span></h2>
 
-<div>
-    <button class="w-100 btn btn-secondary btn-lg" type="button"
-            onclick="location.href='/'">
-        메인으로
-    </button>
+<div class="comment">
+    <form role="form" action="/comment" th:object="${commentForm}" method="post">
+        <input type="hidden" name="postId" th:value="${post.id}">
+        <div class="form-group">
+            <label th:for="content">댓글</label>
+            <input type="text" th:field="*{content}" class="form-control" placeholder="댓글을 입력하세요" th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+            <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect name</p>
+        </div>
+        <button type="submit" class="btn-search">저장</button>
+    </form>
 </div>
 
 
+<div th:each="comment : ${comments}">
+    <!-- 댓글 내용 등 출력 -->
+    <ul>
+        <li th:text="${comment.content}"></li>
+    </ul>
+<!--    &lt;!&ndash; 대댓글 작성 폼 토글 버튼 &ndash;&gt;-->
+<!--    <button onclick="toggleReplyForm('reply-form-${comment.id}')">대댓글 작성</button>-->
+
+<!--    &lt;!&ndash; 대댓글 출력 &ndash;&gt;-->
+<!--    <div th:each="childComment : ${comment.childComments}">-->
+<!--        &lt;!&ndash; 대댓글 내용 등 출력 &ndash;&gt;-->
+<!--        <ul>-->
+<!--            <li th:text="${childComment.content}"></li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; 대댓글 작성 폼 &ndash;&gt;-->
+<!--    <div id="reply-form-${comment.id}" class="hidden" width="30px">-->
+<!--        <form action="/comment" method="post">-->
+<!--            <input type="hidden" name="parentCommentId" th:value="${comment.id}">-->
+<!--            <input type="hidden" name="postId" th:value="${post.id}"> &lt;!&ndash; 추가된 부분 &ndash;&gt;-->
+<!--            &lt;!&ndash; 대댓글 작성 폼 내용 등 &ndash;&gt;-->
+<!--            <textarea name="content"></textarea>-->
+<!--            <button type="submit">작성</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+</div>
+
+
+<!-- JavaScript 코드 -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    function toggleReplyForm(replyFormId) {
+        var replyForm = document.getElementById(replyFormId);
+        if (replyForm.classList.contains('hidden')) {
+            replyForm.classList.remove('hidden');
+
+        } else {
+            replyForm.classList.add('hidden');
+        }
+    }
+    /*]]>*/
+</script>
+
+
+
+<div>
+    <button class="w-100 btn btn-secondary btn-lg" type="button"
+            onclick="location.href='/';">
+        메인으로
+    </button>
+</div>
 
 </body>
 </html>

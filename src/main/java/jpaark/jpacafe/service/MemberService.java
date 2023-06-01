@@ -55,7 +55,11 @@ public class MemberService {
     }
 
     // 개별 멤버 조회
-    public Member findOne(String nickname) {
+    public Member findOne(Long id) {
+        return memberRepository.findOne(id);
+    }
+
+    public Member findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
     }
 

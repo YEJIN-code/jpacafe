@@ -42,7 +42,7 @@ public class PostController {
 
     @PostMapping("/cafes/newPost")
     public String createPost(@Valid PostForm form, BindingResult result, Model model,
-                             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember,
+                             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginMember,
                              @RequestParam(name = "category") String categoryName,
                              HttpSession session) {
         if (result.hasErrors()) {
@@ -63,7 +63,7 @@ public class PostController {
         post.setUser(loginMember);
 
 
-        User user = userService.findOne(loginMember.getId());
+        Users user = userService.findOne(loginMember.getId());
         log.info("createPost cafeId: {}, userId: {}", cafeId, user.getId()); // 로그 추가
         List<Member> members = memberService.findByCafeIdAndUserId(cafeId, user.getId());
         log.info("createPost members size: {}", members.size());
@@ -84,7 +84,7 @@ public class PostController {
     }
 
     @GetMapping("/cafes/{postId}/postHome")
-    public String postHome(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginMember,
+    public String postHome(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginMember,
                            @PathVariable Long postId,  @RequestParam Long cafeId,
                            Model model, HttpSession session) {
 

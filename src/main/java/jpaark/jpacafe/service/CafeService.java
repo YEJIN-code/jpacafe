@@ -4,7 +4,7 @@ import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.Status.StatusSet;
-import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.GradeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
@@ -59,7 +59,7 @@ public class CafeService {
 
     @Transactional(readOnly = false)
     public Member createCafe(String userId, Long cafeId, String nickname) {
-        User user = userRepository.findOne(userId);
+        Users user = userRepository.findOne(userId);
         Cafe cafe = cafeRepository.findOne(cafeId);
 
         Grade grade = new Grade();

@@ -19,7 +19,7 @@ public class UserSticker {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users user;
 
     @OneToMany(mappedBy = "userSticker")
     private List<Sticker> stickers = new ArrayList<>();
@@ -27,7 +27,7 @@ public class UserSticker {
 
     private StatusSet use;
 
-    public void setUser(User user) { // 이 클래스의 매니 투 원
+    public void setUser(Users user) { // 이 클래스의 매니 투 원
         this.user = user;
         user.getUserStickers().add(this);
     }

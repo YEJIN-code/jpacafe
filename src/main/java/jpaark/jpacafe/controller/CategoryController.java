@@ -61,7 +61,7 @@ public class CategoryController {
     }
 
     @GetMapping("/posts")
-    public String categoryPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) User loginUser,
+    public String categoryPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
                                @RequestParam("categoryId") Long categoryId, @RequestParam("cafeId") Long cafeId,
                                Model model) {
         Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회

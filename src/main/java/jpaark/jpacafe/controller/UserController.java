@@ -3,7 +3,7 @@ package jpaark.jpacafe.controller;
 import jpaark.jpacafe.controller.form.LoginForm;
 import jpaark.jpacafe.controller.form.UserForm;
 import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.User;
+import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.repository.UserRepository;
@@ -17,9 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
@@ -62,7 +60,7 @@ public class UserController {
             return "users/createUserForm";
         }
 
-        User user = new User();
+        Users user = new Users();
         user.setId(form.getId());
         user.setPassword(form.getPassword());
         user.setName(form.getName());
@@ -90,7 +88,7 @@ public class UserController {
         // 성공로직
 
         System.out.println("form = " + form);
-        User loginMember = userService.login(form.getLoginId(), form.getPassword());
+        Users loginMember = userService.login(form.getLoginId(), form.getPassword());
         log.info("login? {}", loginMember);
 
         if (loginMember == null) {
@@ -129,7 +127,7 @@ public class UserController {
     @GetMapping("/")
     public String homeLoginV3Spring(
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false)
-            User loginMember,
+            Users loginMember,
             Model model) {
 //세션에 회원 데이터가 없으면 home
         if (loginMember == null) {
@@ -142,5 +140,11 @@ public class UserController {
         model.addAttribute("members", allMember);
         return "/users/index";
     }
-
+    @GetMapping("/profile")
+    public String goProfile(@RequestParam(name = "loginId") String loginId,
+                            Model model) {
+        Users user = userService.getUser(loginId);
+        model.addAttribute("user", user);
+        return "/users/profile";
+    }
 }

@@ -47,7 +47,7 @@
         float: right;
         background-color: oldlace;
         margin-top: 10px;
-        margin-right: 20px;
+        margin-left: 20px;
         height: 30px;
         width: 20%;
     }
@@ -76,7 +76,7 @@
         border-spacing: 1px;
         text-align: left;
         line-height: 1.5;
-        margin: 20px 10px;
+        margin : 20px 10px;
         border-top: 1px solid #ccc;
         font-size: medium;
     }
@@ -115,92 +115,92 @@
 </style>
 
 <body>
-    <div class="top">
-        <div class="py-5 text-center">
-            <h2>홈 화면</h2>
-        </div>
+<div class="top">
+    <div class="py-5 text-center">
+        <h2>홈 화면</h2>
     </div>
+</div>
 
-    <div class="mid">
-        <div class="mid1">
-            <div class="profile">
-                <form th:action="@{/profile}" method="get">
-                    <input type="hidden" name="loginId" th:value="${user.id}" />
-                    <button class="w-100 btn btn-dark btn-lg" type="submit">
-                        프로필
-                    </button>
-                </form>
-            </div>
-            <div class="logOut">
-                <form th:action="@{/logout}" method="post">
-                    <button class="w-100 btn btn-dark btn-lg" type="submit">
-                        로그아웃
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="mid2">
-            <h4 class="mb-3" th:text="|${user.name}님 안녕하세요!|">
-                로그인 사용자 이름
-            </h4>
-            <h6>
-                오늘 하루를 아카이브해보세요!
-            </h6>
-        </div>
-    </div>
-
-    <div class="head-content">
-        <div class="search">
-            <form th:action="@{/search}" method="get">
-                <input
-                        type="text"
-                        class="input-keyword"
-                        name="keyword"
-                        placeholder="검색어를 입력하세요"
-                />
-                <button type="submit" class="btn-search">검색</button>
+<div class="mid">
+    <div class="mid1">
+        <div class="profile">
+            <form th:action="@{/profile}" method="get">
+                <input type="hidden" name="loginId" th:value="${user.id}" />
+                <button class="w-100 btn btn-dark btn-lg" type="submit">
+                    프로필
+                </button>
             </form>
         </div>
-
-        <div class="createCafe">
-            <form th:action="@{/cafes/newCafe}" method="get">
+        <div class="logOut">
+            <form th:action="@{/logout}" method="post">
                 <button class="w-100 btn btn-dark btn-lg" type="submit">
-                    카페 생성
+                    로그아웃
                 </button>
             </form>
         </div>
     </div>
 
-    <hr class="my-4" />
-    <div>
-        <!-- members 리스트가 비어있을 때 -->
-        <div class="main" th:if="${#lists.isEmpty(members)}">
-            <p>아직 가입한 아카이브 카페가 없어요.</p>
-            <p>카페에 가입해보세요!</p>
-        </div>
-
-        <!-- members 리스트가 비어있지 않을 때 -->
-        <div class="main" th:if="${not #lists.isEmpty(members)}">
-            <table>
-                <tr th:each="member : ${members}">
-                    <th scope="row" th:text="${member.cafe.name}"></th>
-                    <td>
-                        <a
-                                th:href="@{/cafeHome(cafeId=${member.cafe.id})}"
-                                class="w-100 btn btn-dark btn-lg"
-                        >
-                            카페 진입
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="main" th:if="${members == null}">
-            <p>회원이 소속된 카페가 없습니다.</p>
-        </div>
+    <div class="mid2">
+        <h4 class="mb-3" th:text="|${user.name}님 안녕하세요!|">
+            로그인 사용자 이름
+        </h4>
+        <h6>
+            오늘 하루를 아카이브해보세요!
+        </h6>
     </div>
+</div>
+
+<div class="head-content">
+    <div class="search">
+        <form th:action="@{/search}" method="get">
+            <input
+                    type="text"
+                    class="input-keyword"
+                    name="keyword"
+                    placeholder="검색어를 입력하세요"
+            />
+            <button type="submit" class="btn-search">검색</button>
+        </form>
+    </div>
+
+    <div class="createCafe">
+        <form th:action="@{/cafes/newCafe}" method="get">
+            <button class="w-100 btn btn-dark btn-lg" type="submit">
+                카페 생성
+            </button>
+        </form>
+    </div>
+</div>
+
+<hr class="my-4" />
+<div>
+    <!-- members 리스트가 비어있을 때 -->
+    <div class="main" th:if="${#lists.isEmpty(members)}">
+        <p>아직 가입한 아카이브 카페가 없어요.</p>
+        <p>카페에 가입해보세요!</p>
+    </div>
+
+    <!-- members 리스트가 비어있지 않을 때 -->
+    <div class="main" th:if="${not #lists.isEmpty(members)}">
+        <table class="td-cafe">
+            <tr th:each="member : ${members}">
+                <th scope="row" th:text="${member.cafe.name}"></th>
+                <td>
+                    <a
+                            th:href="@{/cafeHome(cafeId=${member.cafe.id})}"
+                            class="w-100 btn btn-dark btn-lg"
+                    >
+                        카페 진입
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="main" th:if="${members == null}">
+        <p>회원이 소속된 카페가 없습니다.</p>
+    </div>
+</div>
 <!-- /container -->
 </body>
 </html>

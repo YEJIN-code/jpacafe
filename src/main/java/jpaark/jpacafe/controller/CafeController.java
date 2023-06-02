@@ -31,6 +31,7 @@ public class CafeController {
     private final PostService postService;
     private final CategoryService categoryService;
     private final UserService userService;
+    private final CafeHomeService cafeHomeService;
 
 
     @GetMapping("/cafes/newCafe")
@@ -97,30 +98,12 @@ public class CafeController {
         log.info("cafeHome? cafeId: {}", cafeId); // 로그 추가
         log.info("cafeHome? loginUser: {}", loginUser); // 로그 추가
 
-        Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회
-        List<Post> postList = postService.findByCafeId(cafeId);
-        model.addAttribute("cafe", cafe);
-        model.addAttribute("posts", postList);
-        List<Category> categories = categoryService.findAllByCafeId(cafeId);
-        model.addAttribute("categories", categories);
-        model.addAttribute("user", loginUser);
-
-        List<Member> memberList = memberService.findByCafeIdAndUserId(cafeId, loginUser.getId());
-        if (!memberList.isEmpty()) {
-            model.addAttribute("member", memberList.get(0)); // 멤버 정보 보내줌
-            List<Grade> grades = gradeService.findByMemberId(memberList.get(0).getId()); // 등급 정보 불러옴
-            model.addAttribute("grade", grades.get(0)); // 등급도 보내줌
-        } else {
-            model.addAttribute("member", null); // null 을 보내줌
-            Grade guest = new Grade();
-            guest.setCafePermission(StatusSet.OFF);
-            guest.setCategoryPermission(StatusSet.OFF);
-            guest.setPostPermission(StatusSet.OFF);
-            model.addAttribute("grade", guest); // 등급은 게스트로 보내줌
-        }
+        cafeHomeService.cafeHomeMethod(loginUser, model, cafeId);
 
         return "cafes/cafeHome";
     }
+
+
 
     @GetMapping("/search")
     public String searchFunction(@RequestParam(name = "keyword") String keyword,

@@ -1,5 +1,6 @@
 package jpaark.jpacafe.service;
 
+import jpaark.jpacafe.controller.form.PostForm;
 import jpaark.jpacafe.domain.Category;
 import jpaark.jpacafe.domain.Post;
 import jpaark.jpacafe.repository.PostRepository;
@@ -15,11 +16,30 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CategoryService categoryService;
 
     @Transactional(readOnly = false)
     public Long join(Post post) {
         postRepository.save(post);
         return post.getId();
+    }
+
+    @Transactional
+    public Post updatePost(Long postId, String title, String content, String category) {
+        Post findPost = postRepository.findOne(postId);
+        findPost.setTitle(title);
+        findPost.setContent(content);
+        findPost.setCategory(categoryService.findByName(category).get(0));
+
+        return findPost;
+    }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = postRepository.findOne(postId);
+        if (post != null) {
+            postRepository.delete(post);
+        }
     }
 
     public Post findOne(Long id) {
@@ -40,5 +60,17 @@ public class PostService {
 
     public List<Post> findLatestPosts(int count) {
         return postRepository.findLatestPosts(3);
+    }
+
+    public List<Post> findByTitle(String keyword) {
+        return postRepository.searchPostByTitle(keyword);
+    }
+
+    public List<Post> findByContent(String keyword) {
+        return postRepository.searchPostByContent(keyword);
+    }
+
+    public List<Post> findByAllKeyword(String keyword) {
+        return postRepository.searchPostByAll(keyword);
     }
 }

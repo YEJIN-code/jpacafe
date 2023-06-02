@@ -1,10 +1,7 @@
 package jpaark.jpacafe.service;
 
-import jpaark.jpacafe.domain.Cafe;
-import jpaark.jpacafe.domain.Grade;
-import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.*;
 import jpaark.jpacafe.domain.Status.StatusSet;
-import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.GradeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
@@ -12,6 +9,7 @@ import jpaark.jpacafe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -83,4 +81,6 @@ public class CafeService {
     public List<Cafe> searchCafe(String keyword) {
         return cafeRepository.searchCafe(keyword);
     }
+
+
 }

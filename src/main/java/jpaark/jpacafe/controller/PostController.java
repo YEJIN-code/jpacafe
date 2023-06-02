@@ -29,6 +29,7 @@ public class PostController {
     private final MemberService memberService;
     private final UserService userService;
     private final CommentService commentService;
+    private final CafeHomeService cafeHomeService;
 
     @GetMapping("/cafes/newPost")
     public String newPost(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
@@ -90,21 +91,18 @@ public class PostController {
                            @PathVariable Long postId,  @RequestParam Long cafeId,
                            Model model, HttpSession session) {
 
-        log.info("hello? cafeId: {}", cafeId);
         Post post = postService.findOne(postId);
 
         Member member = new Member();
 
         if (loginMember != null) {
             String userId = loginMember.getId();
-            log.info("hello? userId: {}", userId);
             List<Member> members = memberService.findByCafeIdAndUserId(cafeId, userId);
             if (members.size()!=0) { // 존재하는 회원
                 member = members.get(0);
             } else { // 존재하지 않는 회원
             }
 
-            log.info("hello? findByCafeIdAndUserId - members size: {}", members.size());
 
             model.addAttribute("memberNickname", member.getNickname());
         } else {
@@ -118,9 +116,67 @@ public class PostController {
         model.addAttribute("comments", comments);
         model.addAttribute("commentForm", new CommentForm());
 
+        cafeHomeService.cafeHomeMethod(loginMember, model, cafeId);
+
         return "cafes/postHome";
     }
 
-    // 다른 메서드와 필드 생략...
+    @GetMapping("/modify/{postId}")
+    public String modifyPostForm(@PathVariable Long postId, Model model) {
+
+        Post post = postService.findOne(postId);
+        PostForm form = new PostForm();
+        form.setId(post.getId());
+        form.setTitle(post.getTitle());
+        Category category = post.getCategory();
+        form.setCategory(category.getName());
+        form.setContent(post.getContent());
+
+        List<Category> categories = post.getCafe().getCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("form", form);
+        return "cafes/modifyPost";
+    }
+
+    @PostMapping("/modify/{postId}")
+    public String modifyPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginMember,
+                             @ModelAttribute("form") PostForm form,
+                             @PathVariable Long postId) {
+
+        Post post = postService.updatePost(postId, form.getTitle(), form.getContent(), form.getCategory());
+
+        return "redirect:/cafes/" + post.getId() + "/postHome?cafeId=" + post.getCafe().getId();
+    }
+
+    @DeleteMapping("/delete/{postId}")
+    public String deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return "redirect:/cafes/postHome"; // 삭제 후 리다이렉트할 URL 설정
+    }
+
+
+    @GetMapping("/searchPost")
+    public String searchPost(
+            @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
+            @RequestParam("keyword") String keyword,
+            @RequestParam("option") String option,
+            @RequestParam("cafeId") Long cafeId,
+            Model model) {
+        cafeHomeService.postSearchMethod(loginUser, model, cafeId);
+
+
+        if ("all".equals(option)) {
+            model.addAttribute("posts", postService.findByAllKeyword(keyword));
+        } else if ("title".equals(option)) {
+            model.addAttribute("posts", postService.findByTitle(keyword));
+        } else if ("content".equals(option)) {
+            model.addAttribute("posts", postService.findByContent(keyword));
+        } else {
+            model.addAttribute("posts", null);
+        }
+
+        return "cafes/searchPost";
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Category;
+import jpaark.jpacafe.domain.Post;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,10 @@ public class CategoryRepository {
 
     public void save(Category category) {
         em.persist(category);
+    }
+
+    public void delete(Category category) {
+        em.remove(category);
     }
 
     public Category findOne(Long id) {
@@ -37,4 +42,5 @@ public class CategoryRepository {
                 .setParameter("name", name)
                 .getResultList();
     }
+
 }

@@ -105,7 +105,7 @@
       <input type="text" id="searchInput" name="keyword" />
       <input type="hidden" name="cafeId" th:value="${cafe.id}" />
       <button type="submit">검색</button>
-<!--      옵션이랑 키워드 전달-->
+      <!--      옵션이랑 키워드 전달-->
     </form>
 
   </div>
@@ -208,6 +208,9 @@
                             alert("회원만 확인할 수 있습니다.");
                         }
                     </script>
+        <tr th:if="${posts == null || #lists.size(posts) == 0}">
+          <td colspan="3">검색 결과가 없습니다.</td>
+        </tr>
         </tr>
         </tbody>
       </table>

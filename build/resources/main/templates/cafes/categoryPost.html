@@ -39,20 +39,34 @@
   <div th:if="${not #lists.isEmpty(categories)}">
     <ul>
       <li th:each="category : ${categories}">
-      <span th:text="${category.name}"
-            th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
-            onmouseover="changeColor(this, 'red')"
-            onmouseout="changeColor(this, 'black')">
-      </span>
-
-        <script>
-        function changeColor(element, color) {
-          element.style.color = color;
-        }
-      </script>
+            <span>
+                <span th:text="${category.name}"
+                      th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
+                      onmouseover="changeColor(this, 'red')"
+                      onmouseout="changeColor(this, 'black')">
+                </span>
+                <span th:onclick="|confirmDelete(${category.id})|"
+                      style="cursor: pointer; color: red;">
+                    (-)
+                </span>
+            </span>
       </li>
     </ul>
   </div>
+
+  <script>
+    function changeColor(element, color) {
+        element.style.color = color;
+    }
+
+    function confirmDelete(categoryId) {
+        if (confirm('카테고리를 삭제하시겠습니까?')) {
+            // 예를 선택한 경우, categoryId를 컨트롤러로 전달
+            location.href = '/deleteCategory?categoryId=' + categoryId;
+        }
+    }
+</script>
+
 
 
   </li>

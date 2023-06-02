@@ -60,6 +60,21 @@ public class CategoryController {
         return "redirect:/cafeHome?cafeId="+cafeId;
     }
 
+    @GetMapping("/deleteCategory")
+    public String deleteCategory(@RequestParam("categoryId") Long categoryId, @RequestParam(name = "cafeId") Long cafeId) {
+
+        Category category = categoryService.findOne(categoryId);
+        List<Post> posts = postService.findByCategoryId(categoryId);
+
+        if (posts.size() == 0) {
+            categoryService.deleteCategory(categoryId);
+        } else {
+            return "error";
+        }
+
+        return "redirect:/cafeHome?cafeId="+cafeId;
+    }
+
     @GetMapping("/posts")
     public String categoryPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
                                @RequestParam("categoryId") Long categoryId, @RequestParam("cafeId") Long cafeId,

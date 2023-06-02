@@ -5,160 +5,246 @@
   <link th:href="@{/css/bootstrap.min.css}"
         href="../css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="container" style="max-width: 600px">
-  <div class="py-5 text-center">
-    <h2>카페 사이트</h2>
-  </div>
-  <div>
-    <h4>카페 이름</h4>
-    <p th:text="${cafe.name}"></p>
-  </div>
-  <div>
-    <h4>카페 소개</h4>
-    <p th:text="${cafe.info}"></p>
-  </div>
 
-  <!--  비회원에게 출력하는 요소-->
-  <div th:if="${member == null}">
-    <div class="col">
+<style>
+    .cafe {
+        height: 30px;
+        text-align: center;
+    }
+
+    .cafeInfo {
+        height: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .write {
+        width: 20%;
+        height: 650px;
+        float: left;
+        border-color: darkgray;
+    }
+
+    .read {
+        height: 650px;
+        width: 80%;
+        float: right;
+        border-color: darkgray;
+    }
+
+    .footer {
+        height: 200px;
+        width: 100%;
+    }
+
+    .btn-home {
+        float: left;
+    }
+
+    .left {
+        margin-left: 50px;
+        float: left;
+    }
+
+    .cate {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .post {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .empty-Cate {
+        margin-top: 50px;
+    }
+
+    .profile {
+        border : black;
+        height: 100px;
+        text-align: center;
+    }
+
+    .table-row:hover {
+      background-color: lightgray;
+      cursor: pointer;
+    }
+</style>
+
+<body>
+<div class="container" style="max-width: 900px">
+  <div>
+    <div class="py-5 text-center">
+      <h1>Cafe</h1>
+    </div>
+    <div class="cafe">
+      <h3 th:text="${cafe.name}">카페 이름</h3>
+    </div>
+    <div class="cafeInfo">
+      <h6 th:text="${cafe.info}">카페 설명</h6>
+    </div>
+
+    <!--  비회원에게 출력하는 요소-->
+    <div th:if="${member == null}">
       <button class="w-100 btn btn-dark btn-lg"
               th:onclick="|location.href='/cafes/join?cafeId=${cafe.id}'|"
               type="button">
-        가입하기
+        카페 가입
       </button>
     </div>
   </div>
 
-  <!--  회원에게 출력하는 요소-->
-  <div th:unless="${member == null}">
-    <div class="col">
-      <button class="w-100 btn btn-dark btn-lg"
-              th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
-              type="button">
-        글쓰기
-      </button>
-    </div>
-    <div th:unless="${grade.categoryPermission == OFF}">
-      <div class="col">
+  <div>
+    <form th:action="@{/searchPost}" method="get">
+      <select id="searchOption" name="option">
+        <option value="all">전체</option>
+        <option value="title">제목</option>
+        <option value="content">내용</option>
+      </select>
+      <input type="text" id="searchInput" name="keyword" />
+      <input type="hidden" name="cafeId" th:value="${cafe.id}" />
+      <button type="submit">검색</button>
+<!--      옵션이랑 키워드 전달-->
+    </form>
+
+  </div>
+
+  <div class="cafeHome">
+    <div class="write">
+      <div class="profile">
+        <h4>내 정보</h4>
+        <h4 th:text="${member != null ? member.nickname : 'Guest'}">Member Nickname</h4>
+        <h4 th:text="${grade.name}">등급명</h4>
+      </div>
+      <!--  회원에게 출력하는 요소-->
+      <div class="post" th:unless="${member == null}">
         <button class="w-100 btn btn-dark btn-lg"
-                th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
+                th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
                 type="button">
-          카테고리 생성
+          글쓰기
         </button>
-      </div>
-    </div>
-    <div th:if="${grade.categoryPermission == ON}">
-      <p>카테고리 생성권한 없음</p>
-    </div>
 
-    <div th:unless="${grade.categoryPermission == OFF}">
-      <div class="col">
-        <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
-          <input type="hidden" name="memberId" th:value="${member.id}">
-          <button class="w-100 btn btn-dark btn-lg" type="submit">
-            탈퇴하기
+        <div class="cate" th:if="${grade.name == 'manager'}">
+          <button class="w-100 btn btn-dark btn-lg"
+                  th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
+                  type="button">
+            카테고리 생성
           </button>
-        </form>
+        </div>
       </div>
-    </div>
-    <script th:inline="javascript">
-  function confirmDeleteMember(event) {
-    if (!confirm('탈퇴하시겠습니까?')) {
-      event.preventDefault(); // 폼 제출을 막습니다.
-      return false;
-    }
 
-    showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
-    return true;
-  }
+      <div>
+  <span style="cursor: pointer; color: blue;"
+        th:text="전체게시물"
+        th:onclick="|location.href='/cafeHome?cafeId=${cafe.id}'|"
+        onmouseover="changeColor(this, 'red')"
+        onmouseout="changeColor(this, 'black')">
+  </span>
+      </div>
+      <div th:if="${not #lists.isEmpty(categories)}">
+        <ul>
+          <li th:each="category : ${categories}">
+            <span>
+                <span th:text="${category.name}"
+                      th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
+                      onmouseover="changeColor(this, 'red')"
+                      onmouseout="changeColor(this, 'black')">
+                </span>
+                <span class="cateDel" th:if="${grade.name == 'manager'}" th:onclick="|confirmDelete(${category.id}, ${cafe.id})|"
+                      style="cursor: pointer; color: red;">
+                    -
+                </span>
 
-  // 탈퇴되었습니다 팝업을 표시하는 함수
-  function showWithdrawalPopup() {
-    alert('탈퇴되었습니다.');
-  }
-</script>
-
-  </div>
-
-  <div th:if="${not #lists.isEmpty(categories)}">
-    <ul>
-      <li th:each="category : ${categories}">
-      <span th:text="${category.name}"
-            th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
-            onmouseover="changeColor(this, 'red')"
-            onmouseout="changeColor(this, 'black')">
-      </span>
-
-        <script>
-        function changeColor(element, color) {
-          element.style.color = color;
-        }
-      </script>
-      </li>
-    </ul>
-  </div>
-
-
-  </li>
-  </ul>
-</div>
-
-
-<div th:unless="${not #lists.isEmpty(categories)}">
-  <!-- 비어있는 경우에 실행될 내용 -->
-  <p>카테고리가 없습니다.</p>
-</div>
-
-
-<div>
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>제목</th>
-      <th>작성자</th>
-      <th>작성일자</th>
-      <th>열람</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="post : ${posts}">
-      <td th:text="${post.title}"></td>
-      <td th:text="${post.user.name}"></td>
-      <td th:text="${post.dateTime}"></td>
-      <td>
-        <a
-           th:if="${member == null}"
-           onclick="showWarning()">열람</a>
-        <a href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}"
-           th:unless="${member == null}">열람</a>
-      </td>
+            </span>
+          </li>
+        </ul>
+      </div>
 
       <script>
-  function showWarning() {
-    alert("회원만 확인할 수 있습니다.");
-  }
+    function changeColor(element, color) {
+        element.style.color = color;
+    }
+
+    function confirmDelete(categoryId, cafeId)  {
+        if (confirm('카테고리를 삭제하시겠습니까? 게시물이 존재하는 카테고리는 삭제할 수 없습니다.')) {
+            // 예를 선택한 경우, categoryId를 컨트롤러로 전달
+            location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId;
+        }
+    }
 </script>
 
-    </tr>
-    </tbody>
-  </table>
+      <div th:if="${grade.categoryPermission == 'ON'}">
+        <p>카테고리 생성권한 없음</p>
+      </div>
+
+      <div class="empty-Cate" th:unless="${not #lists.isEmpty(categories)}">
+        <!-- 비어있는 경우에 실행될 내용 -->
+        <p>카테고리가 없습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="read">
+    <div class="table">
+      <table class="table table">
+        <thead>
+        <tr>
+          <th style="width: 60%;">제목</th>
+          <td style="width: 20%;">작성자</td>
+          <td style="width: 20%;">작성일자</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts}" class="table-row">
+          <th style="width: 60%;">
+            <a th:if="${member == null}" th:text="${post.title}" onclick="showWarning()"></a>
+            <a th:text="${post.title}"  href="#" th:href="@{'/cafes/' + ${post.id} + '/postHome?cafeId=' + ${cafe.id}}" th:unless="${member == null}"></a>
+          </th>
+          <td th:text="${post.user.name}" style="width: 20%;"></td>
+          <td th:text="${#temporals.format(post.dateTime, 'yyyy-MM-dd')}" style="width: 20%;"></td>
+          <script>
+                        function showWarning() {
+                            alert("회원만 확인할 수 있습니다.");
+                        }
+                    </script>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="btn-home">
+      <button class="btn btn-dark btn-lg" type="button"
+              onclick="location.href='/'">Home
+      </button>
+    </div>
+    <div class="left" th:unless="${member == null}">
+      <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+        <input type="hidden" name="memberId" th:value="${member.id}">
+        <button class="btn btn-dark btn-lg" type="submit">
+          카페 탈퇴
+        </button>
+      </form>
+    </div>
+
+    <script th:inline="javascript">
+            function confirmDeleteMember(event) {
+                if (!confirm('탈퇴하시겠습니까?')) {
+                    event.preventDefault(); // 폼 제출을 막습니다.
+                    return false;
+                }
+
+                showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
+                return true;
+            }
+
+            // 탈퇴되었습니다 팝업을 표시하는 함수
+            function showWithdrawalPopup() {
+                alert('탈퇴되었습니다.');
+            }
+        </script>
+  </div>
 </div>
-
-
-
-<div>
-  <button class="w-100 btn btn-secondary btn-lg" type="button"
-          onclick="location.href='/'">
-    메인으로
-  </button>
-</div>
-</div>
-
-
-
-
-
 </body>
 </html>

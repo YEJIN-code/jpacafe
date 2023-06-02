@@ -5,9 +5,11 @@ import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.Users;
+import jpaark.jpacafe.service.CafeHomeService;
 import jpaark.jpacafe.service.CafeService;
 import jpaark.jpacafe.service.GradeService;
 import jpaark.jpacafe.service.MemberService;
+import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ public class MemberController {
     private final GradeService gradeService;
     private final MemberService memberService;
     private final CafeService cafeService;
+    private final CafeHomeService cafeHomeService;
 
     @GetMapping("/member/{memberId}")
     public String getMemberDetails(@PathVariable Long memberId, Model model) {
@@ -64,6 +67,7 @@ public class MemberController {
         Cafe cafe = cafeService.findOne(cafeId);
 
         List<Grade> gradeList = gradeService.findNormalGradesByCafeId(cafeId);
+        log.info("gradeList 0: {}", gradeList.get(0).getName());
         Grade grade = gradeList.get(0);
 
         Users user = loginMember;
@@ -93,5 +97,17 @@ public class MemberController {
 
 
         return "redirect:/";
+    }
+
+    @GetMapping("/cafes/memberList")
+    public String memberList(@RequestParam("cafeId") Long cafeId,
+                             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
+                             Model model) {
+        List<Member> memberList = memberService.findAll(cafeId);
+        model.addAttribute("memberList", memberList);
+
+        cafeHomeService.cafeHomeMethod(loginUser, model, cafeId);
+
+        return "cafes/memberList";
     }
 }

@@ -1,6 +1,7 @@
 package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Category;
+import jpaark.jpacafe.domain.Post;
 import jpaark.jpacafe.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,14 @@ public class CategoryService {
         List<Category> findCategories = categoryRepository.findByName(category.getName());
         if (!findCategories.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 카테고리입니다.");
+        }
+    }
+
+    @Transactional
+    public void deleteCategory(Long categoryId) {
+        Category category = categoryRepository.findOne(categoryId);
+        if (category != null) {
+            categoryRepository.delete(category);
         }
     }
 

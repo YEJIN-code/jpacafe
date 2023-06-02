@@ -1,5 +1,6 @@
 package jpaark.jpacafe.repository;
 
+import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Post;
 import org.springframework.stereotype.Repository;
 
@@ -49,4 +50,34 @@ public class PostRepository {
                 .setMaxResults(count)
                 .getResultList();
     }
+
+    public void delete(Post post) {
+        em.remove(post);
+    }
+
+    public void deleteById(Long id) {
+        Post post = em.find(Post.class, id);
+        if (post != null) {
+            em.remove(post);
+        }
+    }
+
+    public List<Post> searchPostByTitle(String keyword) {
+        return em.createQuery("SELECT p FROM Post p WHERE p.title LIKE CONCAT('%', :keyword, '%')", Post.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
+    }
+
+    public List<Post> searchPostByContent(String keyword) {
+        return em.createQuery("SELECT p FROM Post p WHERE p.content LIKE CONCAT('%', :keyword, '%')", Post.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
+    }
+
+    public List<Post> searchPostByAll(String keyword) {
+        return em.createQuery("SELECT p FROM Post p WHERE p.title LIKE CONCAT('%', :keyword, '%') OR p.content LIKE CONCAT('%', :keyword, '%')", Post.class)
+                .setParameter("keyword", keyword)
+                .getResultList();
+    }
+
 }

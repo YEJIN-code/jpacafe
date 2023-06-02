@@ -103,6 +103,7 @@ public class CafeController {
         model.addAttribute("posts", postList);
         List<Category> categories = categoryService.findAllByCafeId(cafeId);
         model.addAttribute("categories", categories);
+
         model.addAttribute("user", loginUser);
 
         List<Member> memberList = memberService.findByCafeIdAndUserId(cafeId, loginUser.getId());

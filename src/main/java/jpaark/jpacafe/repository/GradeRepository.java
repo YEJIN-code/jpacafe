@@ -48,9 +48,9 @@ public class GradeRepository {
 
         String jpql = "SELECT g FROM Grade g " +
                 "WHERE g.cafe.id = :cafeId AND " +
-                "g.postPermission = 0 AND " +
-                "g.categoryPermission = 0 AND " +
-                "g.cafePermission = 0";
+                "g.postPermission = 1 AND " +
+                "g.categoryPermission = 1 AND " +
+                "g.cafePermission = 1";
 
         List<Grade> grades = em.createQuery(jpql, Grade.class)
                 .setParameter("cafeId", cafeId)

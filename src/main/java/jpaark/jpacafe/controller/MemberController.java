@@ -58,12 +58,13 @@ public class MemberController {
             @Valid MemberForm form, BindingResult result, Model model,
             @RequestParam("cafeId") Long cafeId,
             @SessionAttribute(name = "loginMember", required = false) Users loginMember
-            ) {
+    ) {
 
         log.info("memberController? cafeId: {}", cafeId); // 로그 추가
         Cafe cafe = cafeService.findOne(cafeId);
 
         List<Grade> gradeList = gradeService.findNormalGradesByCafeId(cafeId);
+        log.info("gradeList 0: {}", gradeList.get(0).getName());
         Grade grade = gradeList.get(0);
 
         Users user = loginMember;
@@ -87,7 +88,7 @@ public class MemberController {
 
     @PostMapping("/cafes/deleteMember")
     public String deleteMember(@RequestParam("memberId") Long memberId,
-                          @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
+                               @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
         log.info("memberController? Member id: {}", memberId); // 로그 추가
         memberService.deleteMember(memberId);
 

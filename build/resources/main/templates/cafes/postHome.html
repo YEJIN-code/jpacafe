@@ -69,8 +69,54 @@
       background-color: lightgray;
       cursor: pointer;
     }
-</style>
+ .page {
+        width: 100%;
+    }
 
+    .title {
+        padding-top: 5px;
+        height: 100px;
+    }
+
+    .cate {
+        margin-top: 5px;
+        width: 100px;
+        float: left;
+        height: 40px;
+    }
+
+    .date {
+        margin-top: 5px;
+        width: 100px;
+        float: right;
+        height: 40px;
+    }
+
+    .nickname {
+        padding-top: 5px;
+        height: 40px;
+    }
+
+    .mid {
+        height: 50px;
+    }
+
+    .content {
+        padding-left: 10px;
+        padding-top: 5px;
+        border: 1px solid black;
+        height: 400px;
+    }
+
+    .view {
+        width: 100px;
+        height: 30px;
+    }
+
+    .comment {
+        background-color: red;
+        height: 100px;
+    }
 </style>
 
 <body>
@@ -224,15 +270,6 @@
         <body>
         <h1>Post Details</h1>
 
-        <h2>Post ID: <span th:text="${post.id}"></span></h2>
-        <h2>Category: <span th:text="${post.category.name}"></span></h2>
-        <h2>Title: <span th:text="${post.title}"></span></h2>
-        <h2>content: <span th:text="${post.content}"></span></h2>
-        <h2>View Count: <span th:text="${post.viewCount}"></span></h2>
-        <h2>Date: <span th:text="${post.dateTime}"></span></h2>
-
-        <h2>User Id: <span th:text="${post.user.id}"></span></h2>
-        <h2>Member Nickname: <span th:text="${post.writer}"></span></h2>
 
 
         <div class="modify" th:if="${member.nickname == post.writer || member.grade.name == 'staff' || member.grade.name == 'manager'}">
@@ -332,6 +369,43 @@
                 alert('탈퇴되었습니다.');
             }
         </script>
+    </div>
+
+<body>
+<div class="container" style="max-width: 900px">
+    <div class="page">
+        <div class="title">
+            <div>
+                <button class="w-100 btn btn-secondary btn-lg" type="button"
+                        onclick="location.href='/'">
+                    메인으로
+                </button>
+            </div>
+            <hr>
+            <h2><span th:text="${post.title}"></span></h2>
+        </div>
+        <div class="mid">
+            <div class="cate">
+                <h4><span th:text="${post.category.name}"></span></h4>
+            </div>
+            <div class="date">
+                <h4><span th:text="${#temporals.format(post.dateTime, 'yyyy-MM-dd')}"></span></h4>
+            </div>
+        </div>
+        <hr>
+        <div class="nickname">
+            <h4>작성자 : <span th:text="${post.writer}"></span></h4>
+        </div>
+        <hr>
+        <div class="content">
+            <span th:text="${post.content}"></span>
+        </div>
+        <hr>
+        <div class="view">
+            <h4>조회수 : <span th:text="${post.viewCount}"></span></h4>
+        </div>
+        <hr>
+        <div class="comment">댓글 창</div>
     </div>
 </div>
 </body>

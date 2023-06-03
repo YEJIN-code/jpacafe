@@ -61,7 +61,7 @@ public class MemberController {
             @Valid MemberForm form, BindingResult result, Model model,
             @RequestParam("cafeId") Long cafeId,
             @SessionAttribute(name = "loginMember", required = false) Users loginMember
-            ) {
+    ) {
 
         log.info("memberController? cafeId: {}", cafeId); // 로그 추가
         Cafe cafe = cafeService.findOne(cafeId);
@@ -91,14 +91,13 @@ public class MemberController {
 
     @PostMapping("/cafes/deleteMember")
     public String deleteMember(@RequestParam("memberId") Long memberId,
-                          @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
+                               @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
         log.info("memberController? Member id: {}", memberId); // 로그 추가
         memberService.deleteMember(memberId);
 
 
         return "redirect:/";
     }
-
     @GetMapping("/cafes/memberList")
     public String memberList(@RequestParam("cafeId") Long cafeId,
                              @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,

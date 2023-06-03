@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <link
             th:href="@{/css/bootstrap.min.css}"
             href="../css/bootstrap.min.css"
@@ -14,6 +14,7 @@
         height: 100px;
         position: relative;
     }
+
     .profile {
         background-color: wheat;
         margin-left: 30%;
@@ -22,20 +23,24 @@
         width: 30%;
         float: left;
     }
+
     .logOut {
         background-color: wheat;
         margin-left: 20px;
         margin-top: 10px;
         height: 25px;
         width: 30%;
-        float: left;
+        float: right;
     }
+
     .main {
         width: 100%;
         height: 50px;
-        margin-right: 20px;
+        margin-left: auto;
+        margin-left: auto;
         margin-top: 30px;
     }
+
     .search {
         float: left;
         margin-top: 20px;
@@ -43,6 +48,7 @@
         height: 30px;
         width: 45%;
     }
+
     .createCafe {
         float: right;
         background-color: oldlace;
@@ -51,6 +57,7 @@
         height: 30px;
         width: 20%;
     }
+
     .btn-search {
         background-color: black;
         color: white;
@@ -60,6 +67,7 @@
         border: 0;
         border-radius: 5px;
     }
+
     .input-keyword {
         width: 70%;
         height: 30px;
@@ -76,10 +84,11 @@
         border-spacing: 1px;
         text-align: left;
         line-height: 1.5;
-        margin : 20px 10px;
+        margin: 20px 10px;
         border-top: 1px solid #ccc;
         font-size: medium;
     }
+
     table.td-cafe th {
         width: 150px;
         padding: 10px;
@@ -88,6 +97,7 @@
         font-size: medium;
         border-bottom: 1px solid #ccc;
     }
+
     table.td-cafe td {
         width: 350px;
         padding: 10px;
@@ -95,110 +105,130 @@
         font-size: medium;
         border-bottom: 1px solid #ccc;
     }
+
     .head-content {
         margin-top: 20px;
         height: 50px;
         width: 100%;
     }
+
     .mid {
         height: 50px;
         margin-bottom: 10px;
     }
+
     .mid1 {
         float: right;
         height: 50px;
         width: 50%;
     }
+
     .mid2 {
         width: 50%;
+    }
+
+    .left {
+        width: 50%;
+        height: 650px;
+        float: left;
+        border-color: darkgray;
+    }
+
+    .right {
+        height: 650px;
+        width: 50%;
+        float: right;
+        border-color: darkgray;
     }
 </style>
 
 <body>
-<div class="top">
-    <div class="py-5 text-center">
-        <h2>홈 화면</h2>
-    </div>
-</div>
-
-<div class="mid">
-    <div class="mid1">
-        <div class="profile">
-            <form th:action="@{/profile}" method="get">
-                <input type="hidden" name="loginId" th:value="${user.id}" />
-                <button class="w-100 btn btn-dark btn-lg" type="submit">
-                    프로필
-                </button>
-            </form>
-        </div>
-        <div class="logOut">
-            <form th:action="@{/logout}" method="post">
-                <button class="w-100 btn btn-dark btn-lg" type="submit">
-                    로그아웃
-                </button>
-            </form>
+<div class="container" style="max-width: 900px">
+    <div class="top">
+        <div class="py-5 text-center">
+            <h2>홈 화면</h2>
         </div>
     </div>
 
-    <div class="mid2">
-        <h4 class="mb-3" th:text="|${user.name}님 안녕하세요!|">
-            로그인 사용자 이름
-        </h4>
-        <h6>
-            오늘 하루를 아카이브해보세요!
-        </h6>
-    </div>
-</div>
+    <div class="mid">
+        <div class="mid1">
+            <div class="profile">
+                <form th:action="@{/profile}" method="get">
+                    <input type="hidden" name="loginId" th:value="${user.id}"/>
+                    <button class="w-100 btn btn-dark btn-lg" type="submit">
+                        프로필
+                    </button>
+                </form>
+            </div>
+            <div class="logOut">
+                <form th:action="@{/logout}" method="post">
+                    <button class="w-100 btn btn-dark btn-lg" type="submit">
+                        로그아웃
+                    </button>
+                </form>
+            </div>
+        </div>
 
-<div class="head-content">
-    <div class="search">
-        <form th:action="@{/search}" method="get">
-            <input
-                    type="text"
-                    class="input-keyword"
-                    name="keyword"
-                    placeholder="검색어를 입력하세요"
-            />
-            <button type="submit" class="btn-search">검색</button>
-        </form>
-    </div>
-
-    <div class="createCafe">
-        <form th:action="@{/cafes/newCafe}" method="get">
-            <button class="w-100 btn btn-dark btn-lg" type="submit">
-                카페 생성
-            </button>
-        </form>
-    </div>
-</div>
-
-<hr class="my-4" />
-<div>
-    <!-- members 리스트가 비어있을 때 -->
-    <div class="main" th:if="${#lists.isEmpty(members)}">
-        <p>아직 가입한 아카이브 카페가 없어요.</p>
-        <p>카페에 가입해보세요!</p>
+        <div class="mid2">
+            <h4 class="mb-3" th:text="|${user.name}님 안녕하세요!|">
+                로그인 사용자 이름
+            </h4>
+            <h6>
+                오늘 하루를 아카이브해보세요!
+            </h6>
+        </div>
     </div>
 
-    <!-- members 리스트가 비어있지 않을 때 -->
-    <div class="main" th:if="${not #lists.isEmpty(members)}">
-        <table class="td-cafe">
-            <tr th:each="member : ${members}">
-                <th scope="row" th:text="${member.cafe.name}"></th>
-                <td>
-                    <a
-                            th:href="@{/cafeHome(cafeId=${member.cafe.id})}"
-                            class="w-100 btn btn-dark btn-lg"
-                    >
-                        카페 진입
-                    </a>
-                </td>
-            </tr>
-        </table>
+    <div class="head-content">
+        <div class="search">
+            <form th:action="@{/search}" method="get">
+                <input
+                        type="text"
+                        class="input-keyword"
+                        name="keyword"
+                        placeholder="검색어를 입력하세요"
+                />
+                <button type="submit" class="btn-search">검색</button>
+            </form>
+        </div>
+
+        <div class="createCafe">
+            <form th:action="@{/cafes/newCafe}" method="get">
+                <button class="w-100 btn btn-dark btn-lg" type="submit">
+                    카페 생성
+                </button>
+            </form>
+        </div>
     </div>
 
-    <div class="main" th:if="${members == null}">
-        <p>회원이 소속된 카페가 없습니다.</p>
+    <hr class="my-4"/>
+    <div class="left">
+        <!-- members 리스트가 비어있을 때 -->
+        <div class="main" th:if="${#lists.isEmpty(members)}">
+            <p>아직 가입한 아카이브 카페가 없어요.</p>
+            <p>카페에 가입해보세요!</p>
+        </div>
+
+        <!-- members 리스트가 비어있지 않을 때 -->
+        <div class="main" th:if="${not #lists.isEmpty(members)}">
+            <table class="td-cafe">
+                <tr th:each="member : ${members}">
+                    <th scope="row" th:text="${member.cafe.name}"></th>
+                    <td>
+                        <a
+                                th:href="@{/cafeHome(cafeId=${member.cafe.id})}"
+                                class="w-100 btn btn-dark btn-lg"
+                        >
+                            카페 진입
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="main" th:if="${members == null}">
+            <p>회원이 소속된 카페가 없습니다.</p>
+        </div>
     </div>
 </div>
 <!-- /container -->

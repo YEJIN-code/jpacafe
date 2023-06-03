@@ -100,6 +100,7 @@ public class CafeController {
 
         cafeHomeService.cafeHomeMethod(loginUser, model, cafeId);
 
+
         return "cafes/cafeHome";
     }
 

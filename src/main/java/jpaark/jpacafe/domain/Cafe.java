@@ -31,6 +31,10 @@ public class Cafe {
     @OneToMany(mappedBy = "cafe")
     private List<Post> posts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cafe")
+    private List<CategoryMark> categoryMarks = new ArrayList<>();
+
+
     @Column(unique = true)
     private String name;
 
@@ -69,6 +73,11 @@ public class Cafe {
     public void removePost(Post post) {
         posts.remove(post);
         post.setCafe(null);
+    }
+
+    public void addCategoryMark(CategoryMark categoryMark) {
+        categoryMarks.add(categoryMark);
+        categoryMark.setCafe(this);
     }
 
 

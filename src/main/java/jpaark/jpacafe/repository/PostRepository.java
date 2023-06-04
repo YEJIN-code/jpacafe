@@ -1,11 +1,13 @@
 package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Cafe;
+import jpaark.jpacafe.domain.CategoryMark;
 import jpaark.jpacafe.domain.Post;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -78,6 +80,16 @@ public class PostRepository {
         return em.createQuery("SELECT p FROM Post p WHERE p.title LIKE CONCAT('%', :keyword, '%') OR p.content LIKE CONCAT('%', :keyword, '%')", Post.class)
                 .setParameter("keyword", keyword)
                 .getResultList();
+    }
+
+    public int newPostCountCal(Long categoryId) {
+        LocalDate today = LocalDate.now();
+
+        return em.createQuery("SELECT COUNT(p) FROM Post p WHERE p.category.id = :category AND FUNCTION('TRUNC', p.dateTime) = :today", Long.class)
+                .setParameter("category", categoryId)
+                .setParameter("today", today)
+                .getSingleResult()
+                .intValue();
     }
 
 }

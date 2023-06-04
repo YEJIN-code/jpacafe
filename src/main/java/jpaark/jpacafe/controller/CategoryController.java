@@ -29,6 +29,8 @@ public class CategoryController {
     private final PostService postService;
     private final MemberService memberService;
     private final GradeService gradeService;
+    private final CategoryMarkService categoryMarkService;
+    private final CafeHomeService cafeHomeService;
 
     @GetMapping("/cafes/newCategory")
     public String newCategory(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
@@ -79,33 +81,35 @@ public class CategoryController {
     public String categoryPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
                                @RequestParam("categoryId") Long categoryId, @RequestParam("cafeId") Long cafeId,
                                Model model) {
-        Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회
+
+        cafeHomeService.cafeHomeMethod(loginUser, model, cafeId);
 
         List<Post> postList = postService.findByCategoryId(categoryId);
-        model.addAttribute("cafe", cafe);
         model.addAttribute("posts", postList);
-        List<Category> categories = categoryService.findAllByCafeId(cafeId);
-        model.addAttribute("categories", categories);
-        model.addAttribute("user", loginUser);
-        String nowCategory = categoryService.findOne(categoryId).getName();
+        Category nowCategory = categoryService.findOne(categoryId);
         model.addAttribute("nowCategory", nowCategory);
 
-        List<Member> memberList = memberService.findByCafeIdAndUserId(cafeId, loginUser.getId());
-        if (!memberList.isEmpty()) {
-            model.addAttribute("member", memberList.get(0)); // 멤버 정보 보내줌
-            List<Grade> grades = gradeService.findByMemberId(memberList.get(0).getId()); // 등급 정보 불러옴
-            model.addAttribute("grade", grades.get(0)); // 등급도 보내줌
-        } else {
-            model.addAttribute("member", null); // null 을 보내줌
-            Grade guest = new Grade();
-            guest.setCafePermission(StatusSet.OFF);
-            guest.setCategoryPermission(StatusSet.OFF);
-            guest.setPostPermission(StatusSet.OFF);
-            model.addAttribute("grade", guest); // 등급은 게스트로 보내줌
-        }
 
         return "cafes/categoryPost"; // 실제로 보여줄 뷰 이름을 반환
     }
 
+    @GetMapping("/categoryMark")
+    public String categoryMark(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
+                               @RequestParam("categoryId") Long categoryId, @RequestParam("cafeId") Long cafeId) {
+
+        CategoryMark categoryMark = new CategoryMark();
+
+        categoryMark.setCategory(categoryService.findOne(categoryId));
+        categoryMark.setUser(loginUser);
+        categoryMark.setCafe(cafeService.findOne(cafeId));
+
+        int newPostCount = postService.newPostCountCal(categoryId);
+        categoryMark.setNewPostCount(newPostCount);
+
+        categoryMarkService.join(categoryMark);
+
+        return "redirect:/posts?categoryId=" + categoryId + "&cafeId=" + cafeId;
+
+    }
 
 }

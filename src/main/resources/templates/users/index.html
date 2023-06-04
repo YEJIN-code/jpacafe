@@ -140,6 +140,7 @@
         float: right;
         border-color: darkgray;
     }
+
 </style>
 
 <body>
@@ -201,13 +202,63 @@
         </div>
     </div>
 
+
     <hr class="my-4"/>
     <div class="left">
+
+        <div>
+            <th:block th:if="${cafeNameList.get(0) == '0'}">
+                <table style="background-color: yellow;">
+                    <tr th:each="row : ${#numbers.sequence(0, 9)}">
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <td>
+                            <span th:each="col : ${#numbers.sequence(0, 4)}"></span>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </td>
+                    </tr>
+                </table>
+            </th:block>
+
+            <th:block th:unless="${cafeNameList.get(0) == '0'}">
+                <table style="background-color: yellow;">
+                    <tr th:each="row : ${#numbers.sequence(0, 9)}">
+                        <th:block th:if="${row % 2 == 0}">
+                            <td th:text="${cafeNameList.get(row/2) != '0' ? cafeNameList.get(row/2) : '&nbsp;&nbsp;&nbsp;'}">열 1</td>
+                            <td th:text="${categoryNameList.get(row/2) != '0' ? categoryNameList.get(row/2) : '&nbsp;&nbsp;&nbsp;'}">열 2</td>
+                        </th:block>
+                        <th:block th:if="${row % 2 != 0}">
+                            <td>
+                                <a th:href="@{/hello}">
+                                <p th:text="'Button Size: ' + ${buttonSize[row/2]}"></p> <!-- 버튼사이즈 배열 출력 -->
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <th:block th:if="${buttonSize[row/2] >= i}">
+                                        <button th:text="'&nbsp;&nbsp;'"></button>
+                                        <span>&nbsp;</span>
+                                    </th:block>
+                                    <th:block th:if="${buttonSize[row/2] < i}">
+                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    </th:block>
+                                </th:block>
+                                </a>
+                            </td>
+                        </th:block>
+                    </tr>
+                </table>
+            </th:block>
+
+        </div>
+
+
+
+    </div>
+
+    <div class="right">
         <!-- members 리스트가 비어있을 때 -->
         <div class="main" th:if="${#lists.isEmpty(members)}">
             <p>아직 가입한 아카이브 카페가 없어요.</p>
             <p>카페에 가입해보세요!</p>
         </div>
+
 
         <!-- members 리스트가 비어있지 않을 때 -->
         <div class="main" th:if="${not #lists.isEmpty(members)}">

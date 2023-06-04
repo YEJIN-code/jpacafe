@@ -13,8 +13,11 @@ import java.util.List;
 public class Category {
 
     @Id @GeneratedValue
-    @Column(name = "member_id")
+    @Column(name = "category_id")
     private Long id;
+
+    @OneToMany(mappedBy = "category")
+    private List<CategoryMark> categoryMarks = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cafe_id")
@@ -39,6 +42,11 @@ public class Category {
     public void addPost(Post post) { // 이 클래스의 원 투 매니
         posts.add(post);
         post.setCategory(this);
+    }
+
+    public void addCategoryMark(CategoryMark categoryMark) {
+        categoryMarks.add(categoryMark);
+        categoryMark.setCategory(this);
     }
 
 

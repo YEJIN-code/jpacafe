@@ -20,6 +20,9 @@ public class Users {
     private List<Member> members = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    private List<CategoryMark> categoryMarks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
     private List<Shelf> shelves = new ArrayList<>();
 
     private String email;
@@ -57,6 +60,12 @@ public class Users {
     public String getPassword() {
         return password;
     }
+
+    public void addCategoryMark(CategoryMark categoryMark) {
+        categoryMarks.add(categoryMark);
+        categoryMark.setUser(this);
+    }
+
 
 }
 

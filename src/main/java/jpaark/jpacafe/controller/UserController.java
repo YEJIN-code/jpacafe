@@ -2,13 +2,13 @@ package jpaark.jpacafe.controller;
 
 import jpaark.jpacafe.controller.form.LoginForm;
 import jpaark.jpacafe.controller.form.UserForm;
+import jpaark.jpacafe.domain.CategoryMark;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.repository.UserRepository;
-import jpaark.jpacafe.service.MemberService;
-import jpaark.jpacafe.service.UserService;
+import jpaark.jpacafe.service.*;
 import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -29,9 +30,9 @@ public class UserController {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final CafeRepository cafeRepository;
-    private final MemberService memberService;
-    private final MemberRepository memberRepository;
+    private final CategoryMarkService categoryMarkService;
+    private final PostService postService;
+    private final CategoryService categoryService;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm form, Model model) {
@@ -109,6 +110,45 @@ public class UserController {
         model.addAttribute("members", allMember);
 
         log.info("Session created: {}", session.getId());
+        List<CategoryMark> markList = categoryMarkService.findByUserId(loginMember.getId());
+        log.info("cafeHome? markListSize: {}", markList.size()); // 로그 추가
+
+
+        int[] buttonSize = new int[]{0, 0, 0, 0, 0};
+        List<String> cafeNameList = new ArrayList<>(5);
+        List<String> categoryNameList = new ArrayList<>(5);
+        for (int i = 0; i < 5; i++) {
+            cafeNameList.add("0");
+            categoryNameList.add("0");
+            buttonSize[i] = 0;
+            log.info("cafeNameList.get() = {}", cafeNameList.get(i));
+        }
+
+        int size = markList.size();
+        log.info("markList.size = {}", size);
+        for (int i = 0; i < size; i++) { // 즐찾 리스트 사이즈만큼 반복
+
+            newPostCountUpdate(markList.get(i));
+
+            cafeNameList.set(i, markList.get(i).getCafe().getName());
+            categoryNameList.set(i, markList.get(i).getCategory().getName());
+            buttonSize[i] = markList.get(i).getNewPostCount(); // 새 글 수 저장
+            if (buttonSize[i]>5) { // 새 글 수가 5를 넘으면
+                buttonSize[i] = 5; // 5로 맞춰줌
+            }
+            log.info("cafeNameList.get() = {}", cafeNameList.get(i));
+            log.info("categoryNameList.get() = {}", categoryNameList.get(i));
+
+        }
+
+        log.info("buttonSize = {} {} {} {} {}",buttonSize[0], buttonSize[1], buttonSize[2], buttonSize[3], buttonSize[4]);
+
+        model.addAttribute("markList", markList);
+        model.addAttribute("buttonSize", buttonSize);
+        model.addAttribute("cafeNameList", cafeNameList);
+        model.addAttribute("categoryNameList", categoryNameList);
+
+        model.addAttribute("markList", markList);
 
         return "/users/index"; // 원하는 경로로 변경
     }
@@ -138,8 +178,51 @@ public class UserController {
 
         List<Member> allMember = userRepository.findAllMember(loginMember.getId());
         model.addAttribute("members", allMember);
+        List<CategoryMark> markList = categoryMarkService.findByUserId(loginMember.getId()); // 즐찾 카테고리 리스트
+
+        int[] buttonSize = new int[]{0, 0, 0, 0, 0};
+        List<String> cafeNameList = new ArrayList<>(5);
+        List<String> categoryNameList = new ArrayList<>(5);
+        for (int i = 0; i < 5; i++) {
+            cafeNameList.add("0");
+            categoryNameList.add("0");
+            buttonSize[i] = 0;
+            log.info("cafeNameList.get() = {}", cafeNameList.get(i));
+        }
+
+        int size = markList.size();
+        log.info("markList.size = {}", size);
+        for (int i = 0; i < size; i++) { // 즐찾 리스트 사이즈만큼 반복
+
+            newPostCountUpdate(markList.get(i));
+
+            cafeNameList.set(i, markList.get(i).getCafe().getName());
+            categoryNameList.set(i, markList.get(i).getCategory().getName());
+            buttonSize[i] = markList.get(i).getNewPostCount(); // 새 글 수 저장
+            if (buttonSize[i]>5) { // 새 글 수가 5를 넘으면
+                buttonSize[i] = 5; // 5로 맞춰줌
+            }
+            log.info("cafeNameList.get() = {}", cafeNameList.get(i));
+            log.info("categoryNameList.get() = {}", categoryNameList.get(i));
+        }
+
+        log.info("buttonSize = {} {} {} {} {}",buttonSize[0], buttonSize[1], buttonSize[2], buttonSize[3], buttonSize[4]);
+
+        model.addAttribute("markList", markList);
+        model.addAttribute("buttonSize", buttonSize);
+        model.addAttribute("cafeNameList", cafeNameList);
+        model.addAttribute("categoryNameList", categoryNameList);
+
         return "/users/index";
     }
+
+    private void newPostCountUpdate(CategoryMark markList) {
+
+        int newPostCountCal = postService.newPostCountCal(markList.getCategory().getId());
+        categoryMarkService.updateCategoryMark(markList.getId(), newPostCountCal);
+        log.info("categoryId {}'s updatePostCount = {}", markList.getCategory().getName(), markList.getNewPostCount());
+    }
+
     @GetMapping("/profile")
     public String goProfile(@RequestParam(name = "loginId") String loginId,
                             Model model) {

@@ -73,4 +73,8 @@ public class PostService {
     public List<Post> findByAllKeyword(String keyword) {
         return postRepository.searchPostByAll(keyword);
     }
+
+    public int newPostCountCal(Long categoryId) {
+        return postRepository.newPostCountCal(categoryId);
+    }
 }

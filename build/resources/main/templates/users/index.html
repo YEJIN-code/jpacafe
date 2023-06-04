@@ -11,23 +11,19 @@
 
 <style>
     .top {
-        height: 100px;
+        height: 70px;
         position: relative;
     }
 
     .profile {
-        background-color: wheat;
         margin-left: 30%;
-        margin-top: 10px;
         height: 25px;
         width: 30%;
         float: left;
     }
 
     .logOut {
-        background-color: wheat;
         margin-left: 20px;
-        margin-top: 10px;
         height: 25px;
         width: 30%;
         float: right;
@@ -41,36 +37,27 @@
         margin-top: 30px;
     }
 
+    .createCafe {
+        height: 30px;
+        width: auto;
+    }
+
     .search {
-        float: left;
         margin-top: 20px;
         margin-left: 30%;
-        height: 30px;
+        height: 40px;
         width: 45%;
     }
 
-    .createCafe {
-        float: right;
-        background-color: oldlace;
-        margin-top: 10px;
-        margin-left: 20px;
-        height: 30px;
-        width: 20%;
-    }
-
     .btn-search {
-        background-color: black;
-        color: white;
         float: right;
-        width: 20%;
-        height: 30px;
-        border: 0;
-        border-radius: 5px;
+        width: 25%;
+        height: 35px;
     }
 
     .input-keyword {
         width: 70%;
-        height: 30px;
+        height: 35px;
         font-size: 10px;
         border: 0;
         border-radius: 5px;
@@ -107,24 +94,26 @@
     }
 
     .head-content {
-        margin-top: 20px;
         height: 50px;
         width: 100%;
     }
 
     .mid {
-        height: 50px;
-        margin-bottom: 10px;
+        height: 150px;
+        margin-bottom: 100px;
     }
 
-    .mid1 {
+    .head {
         float: right;
-        height: 50px;
+        height: 30px;
         width: 50%;
+        margin-top: 20px;
     }
 
     .mid2 {
-        width: 50%;
+        width: 100%;
+        height: 50px;
+        text-align: center;
     }
 
     .left {
@@ -132,6 +121,7 @@
         height: 650px;
         float: left;
         border-color: darkgray;
+        margin-top: 20px;
     }
 
     .right {
@@ -139,6 +129,11 @@
         width: 50%;
         float: right;
         border-color: darkgray;
+        margin-top: 20px;
+    }
+    .sh {
+        background-color: lightgray;
+        height: 75%;
     }
 
 </style>
@@ -146,13 +141,8 @@
 <body>
 <div class="container" style="max-width: 900px">
     <div class="top">
-        <div class="py-5 text-center">
-            <h2>홈 화면</h2>
-        </div>
-    </div>
 
-    <div class="mid">
-        <div class="mid1">
+        <div class="head">
             <div class="profile">
                 <form th:action="@{/profile}" method="get">
                     <input type="hidden" name="loginId" th:value="${user.id}"/>
@@ -170,6 +160,12 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="mid">
+        <div class="py-5 text-center">
+            <h2>HOME</h2>
+        </div>
         <div class="mid2">
             <h4 class="mb-3" th:text="|${user.name}님 안녕하세요!|">
                 로그인 사용자 이름
@@ -189,24 +185,13 @@
                         name="keyword"
                         placeholder="검색어를 입력하세요"
                 />
-                <button type="submit" class="btn-search">검색</button>
+                <button type="submit" class="btn-search btn btn-dark btn-lg">검색</button>
             </form>
         </div>
-
-        <div class="createCafe">
-            <form th:action="@{/cafes/newCafe}" method="get">
-                <button class="w-100 btn btn-dark btn-lg" type="submit">
-                    카페 생성
-                </button>
-            </form>
-        </div>
+        <hr class="my-4"/>
     </div>
-
-
-    <hr class="my-4"/>
     <div class="left">
-
-        <div>
+        <div class="sh">
             <th:block th:if="${cafeNameList.get(0) == '0'}">
                 <table style="background-color: yellow;">
                     <tr th:each="row : ${#numbers.sequence(0, 9)}">
@@ -228,6 +213,7 @@
                         </th:block>
                         <th:block th:if="${row % 2 != 0}">
                             <td>
+                                <a th:href="@{/hello}">
                                 <p th:text="'Button Size: ' + ${buttonSize[row/2]}"></p> <!-- 버튼사이즈 배열 출력 -->
                                 <th:block th:each="i : ${#numbers.sequence(1, 5)}">
                                     <th:block th:if="${buttonSize[row/2] >= i}">
@@ -238,19 +224,23 @@
                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                     </th:block>
                                 </th:block>
+                                </a>
                             </td>
                         </th:block>
                     </tr>
                 </table>
             </th:block>
-
         </div>
-
-
-
     </div>
 
     <div class="right">
+        <div class="createCafe">
+            <form th:action="@{/cafes/newCafe}" method="get">
+                <button class="w-100 btn btn-dark btn-lg" type="submit">
+                    카페 생성
+                </button>
+            </form>
+        </div>
         <!-- members 리스트가 비어있을 때 -->
         <div class="main" th:if="${#lists.isEmpty(members)}">
             <p>아직 가입한 아카이브 카페가 없어요.</p>

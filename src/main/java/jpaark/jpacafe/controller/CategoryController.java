@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -33,7 +30,12 @@ public class CategoryController {
     private final CafeHomeService cafeHomeService;
 
     @GetMapping("/cafes/newCategory")
-    public String newCategory(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
+    public String newCategory(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
+                              @RequestParam(name = "cafeId") Long cafeId,
+                              Model model, HttpSession session) {
+
+        cafeHomeService.cafeHomeMethod(loginUser, model, cafeId);
+
         model.addAttribute("categoryForm", new CategoryForm());
         session.setAttribute("cafeId", cafeId); // cafeId 값을 세션에 설정
 
@@ -45,13 +47,11 @@ public class CategoryController {
     public String createCategory(@Valid CategoryForm form, BindingResult result, Model model,
                                  HttpSession session) {
         if (result.hasErrors()) {
-            // 유효성 검사 실패 시 처리할 로직 작성
             return "error";
         }
 
         Long cafeId = (Long) session.getAttribute("cafeId"); // 세션에서 cafeId 값을 가져옴
         Cafe cafe = cafeService.findOne(cafeId);
-
 
         Category category = new Category();
         category.setCafe(cafe);
@@ -63,12 +63,10 @@ public class CategoryController {
     }
 
     @GetMapping("/deleteCategory")
-    public String deleteCategory(@RequestParam("categoryId") Long categoryId, @RequestParam(name = "cafeId") Long cafeId) {
+    public String deleteCategory(@RequestParam("categoryId") Long categoryId, @RequestParam(name = "cafeId") Long cafeId,
+                                 @RequestParam(name = "categoryTotal") int categoryTotal) {
 
-        Category category = categoryService.findOne(categoryId);
-        List<Post> posts = postService.findByCategoryId(categoryId);
-
-        if (posts.size() == 0) {
+        if (categoryTotal == 0) {
             categoryService.deleteCategory(categoryId);
         } else {
             return "error";
@@ -89,8 +87,14 @@ public class CategoryController {
         Category nowCategory = categoryService.findOne(categoryId);
         model.addAttribute("nowCategory", nowCategory);
 
+        Long markCount = categoryMarkService.countByUserId(loginUser.getId());
+        model.addAttribute("markCount", markCount);
+        log.info("alreadyMark = {}", markCount);
 
-        return "cafes/categoryPost"; // 실제로 보여줄 뷰 이름을 반환
+        List<CategoryMark> categoryMarkList = categoryMarkService.findByUserIdAndCategoryId(loginUser.getId(), categoryId);
+        model.addAttribute("alreadyMark", categoryMarkList.size());
+
+        return "cafes/categoryPost";
     }
 
     @GetMapping("/categoryMark")
@@ -110,6 +114,15 @@ public class CategoryController {
 
         return "redirect:/posts?categoryId=" + categoryId + "&cafeId=" + cafeId;
 
+    }
+
+    @GetMapping("/categoryUnMark")
+    public String categoryUnMark(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
+                                 @RequestParam("categoryId") Long categoryId, @RequestParam("cafeId") Long cafeId) {
+
+        CategoryMark categoryMark = categoryMarkService.findByUserIdAndCategoryId(loginUser.getId(), categoryId).get(0);
+        categoryMarkService.deleteCategoryMark(categoryMark.getId());
+        return "redirect:/posts?categoryId=" + categoryId + "&cafeId=" + cafeId;
     }
 
 }

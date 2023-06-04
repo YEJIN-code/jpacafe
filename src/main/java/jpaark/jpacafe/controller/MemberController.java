@@ -81,6 +81,7 @@ public class MemberController {
         memberService.join(member);
 
 
+
         model.addAttribute("member", member);
         model.addAttribute("user", loginMember);
         model.addAttribute("cafeId", cafe.getId()); // cafeId를 모델에 추가

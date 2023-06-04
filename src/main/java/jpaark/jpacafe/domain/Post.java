@@ -57,6 +57,11 @@ public class Post {
         this.dateTime = LocalDateTime.now(); // 현재 시간으로 설정
     }
 
+    public void setViewPlus() {
+        this.viewCount++;
+    }
+
+
 
     // 연관관계 매핑
     public void setMember(Users user) { // 이 클래스의 매니 투 원
@@ -81,4 +86,5 @@ public class Post {
             cafe.getPosts().add(this);
         }
     }
+
 }

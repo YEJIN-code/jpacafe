@@ -59,4 +59,12 @@ public class CommentController {
         return "redirect:/cafes/" + postId + "/postHome?cafeId=" + cafeId;
     }
 
+    @GetMapping("/deleteComment")
+    public String deleteComment(@RequestParam("commentId") Long commentId, @RequestParam("postId") Long postId,
+                                @RequestParam("cafeId") Long cafeId) {
+        commentService.deleteComment(commentId);
+
+        return "redirect:/cafes/" + postId + "/postHome?cafeId=" + cafeId;
+    }
+
 }

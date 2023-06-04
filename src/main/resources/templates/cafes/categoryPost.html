@@ -197,7 +197,7 @@
                       onmouseout="changeColor(this, 'black')">
                 </span>
                 <span class="cateDel" th:if="${grade.name == 'manager'}"
-                      th:onclick="|confirmDelete(${category.id}, ${cafe.id})|"
+                      th:onclick="|confirmDelete(${category.id}, ${cafe.id}, ${category.total})|"
                       style="cursor: pointer; color: red;">
                     -
                 </span>
@@ -212,16 +212,27 @@
         element.style.color = color;
     }
 
-    function confirmDelete(categoryId, cafeId)  {
-        if (confirm('카테고리를 삭제하시겠습니까? 게시물이 존재하는 카테고리는 삭제할 수 없습니다.')) {
+    function confirmDelete(categoryId, cafeId, categoryTotal)  {
+        if (categoryTotal > 0) {
+          alert("게시물이 존재하는 카테고리는 삭제할 수 없습니다!");
+        } else if (confirm('카테고리를 삭제하시겠습니까?')) {
             // 예를 선택한 경우, categoryId를 컨트롤러로 전달
-            location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId;
+            location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId + '&categoryTotal=' + categoryTotal;
         }
     }
-     function bookmark(categoryId, cafeId) {
-      if (confirm('이 카테고리를 북마크할까요?')) {
-        // 예를 선택한 경우, categoryId를 컨트롤러로 전달
-        location.href = '/categoryMark?categoryId=' + categoryId + '&cafeId=' + cafeId;
+
+     function bookmark(categoryId, cafeId, markCount) {
+        if (markCount >= 5) {
+          alert("북마크는 최대 5개까지 가능합니다!");
+        } else if (confirm('이 카테고리를 북마크할까요?')) {
+          location.href = '/categoryMark?categoryId=' + categoryId + '&cafeId=' + cafeId;
+        }
+      }
+
+
+    function unBookmark(categoryId, cafeId) {
+      if (confirm('이 카테고리 북마크를 해제할까요?')) {
+        location.href = '/categoryUnMark?categoryId=' + categoryId + '&cafeId=' + cafeId;
       }
     }
 
@@ -243,9 +254,12 @@
       <h4>현재 카테고리</h4>
       <p>
         <span th:text="${nowCategory.name}"></span>
-        <span class="cateMark" th:onclick="|bookmark(${nowCategory.id}, ${cafe.id})|"
-              style="cursor: pointer; color: red;">+</span>
+        <span class="cateMark" th:if="${alreadyMark == 0}" th:onclick="|bookmark(${nowCategory.id}, ${cafe.id}, ${markCount})|"
+              style="cursor: pointer; color: blue;">+</span>
+        <span class="cateMark" th:if="${alreadyMark == 1}" th:onclick="|unBookmark(${nowCategory.id}, ${cafe.id})|"
+              style="cursor: pointer; color: red;">-</span>
       </p>
+
     </div>
 
 

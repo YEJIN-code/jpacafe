@@ -2,6 +2,7 @@ package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Comment;
 import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.Post;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,10 @@ public class CommentRepository {
 
     public void save(Comment comment){
         em.persist(comment);
+    }
+
+    public void delete(Comment comment) {
+        em.remove(comment);
     }
 
     public Comment findOne(Long id) {

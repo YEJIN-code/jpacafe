@@ -3,13 +3,17 @@ package jpaark.jpacafe.service;
 import jpaark.jpacafe.controller.form.PostForm;
 import jpaark.jpacafe.domain.Category;
 import jpaark.jpacafe.domain.Post;
+import jpaark.jpacafe.repository.CafeRepository;
+import jpaark.jpacafe.repository.CategoryRepository;
 import jpaark.jpacafe.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor // final 로 된 걸 생성해줌
@@ -17,11 +21,23 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = false)
     public Long join(Post post) {
         postRepository.save(post);
+        Category category = categoryRepository.findOne(post.getCategory().getId());
+        category.setTotalPlus();
+        log.info("update category = {}, total = {}", category.getId(), category.getTotal());
         return post.getId();
+    }
+
+    @Transactional
+    public Post updatePostView(Long postId) {
+        Post findPost = postRepository.findOne(postId);
+        findPost.setViewPlus();
+
+        return findPost;
     }
 
     @Transactional
@@ -39,6 +55,8 @@ public class PostService {
         Post post = postRepository.findOne(postId);
         if (post != null) {
             postRepository.delete(post);
+            Category category = categoryRepository.findOne(post.getCategory().getId());
+            category.setTotalMinus();
         }
     }
 
@@ -72,6 +90,10 @@ public class PostService {
 
     public List<Post> findByAllKeyword(String keyword) {
         return postRepository.searchPostByAll(keyword);
+    }
+
+    public int totalPostInCategory(Long categoryId) {
+        return postRepository.totalPostsInCategory(categoryId);
     }
 
     public int newPostCountCal(Long categoryId) {

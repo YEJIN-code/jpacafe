@@ -32,9 +32,12 @@ public class PostController {
     private final CafeHomeService cafeHomeService;
 
     @GetMapping("/cafes/newPost")
-    public String newPost(Model model, HttpSession session, @RequestParam(name = "cafeId") Long cafeId) {
+    public String newPost(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginMember,
+                          @RequestParam(name = "cafeId") Long cafeId,
+                          Model model) {
+        cafeHomeService.cafeHomeMethod(loginMember, model, cafeId);
+
         model.addAttribute("postForm", new PostForm());
-        session.setAttribute("cafeId", cafeId); // cafeId 값을 세션에 설정
         log.info("hello? cafeId: {}", cafeId); // 로그 추가
         List<Category> categories = categoryService.findAllByCafeId(cafeId);
         model.addAttribute("categories", categories);
@@ -65,16 +68,10 @@ public class PostController {
         post.setDateTime();
         post.setUser(loginMember);
 
-
         Users user = userService.findOne(loginMember.getId());
-        log.info("createPost cafeId: {}, userId: {}", cafeId, user.getId()); // 로그 추가
         List<Member> members = memberService.findByCafeIdAndUserId(cafeId, user.getId());
-        log.info("createPost members size: {}", members.size());
-        log.info("createPost members.get(0) id: {}", members.get(0).getId());
 
         post.setWriter(members.get(0).getNickname());
-        log.info("createPost setWriter: {}", members.get(0).getNickname());
-        log.info("createPost DB setWriter: {}", post.getWriter());
 
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);
@@ -82,6 +79,7 @@ public class PostController {
         model.addAttribute("postId", post.getId());
 
         postService.join(post);
+
 
         return "redirect:/cafes/" + post.getId() + "/postHome?cafeId=" + cafeId;
     }
@@ -92,6 +90,7 @@ public class PostController {
                            Model model, HttpSession session) {
 
         Post post = postService.findOne(postId);
+        log.info("now view = {}", post.getViewCount());
 
         Member member = new Member();
 
@@ -101,13 +100,14 @@ public class PostController {
             if (members.size()!=0) { // 존재하는 회원
                 member = members.get(0);
             } else { // 존재하지 않는 회원
+
             }
-
-
             model.addAttribute("memberNickname", member.getNickname());
         } else {
             // 로그인 정보가 없는 경우에 대한 처리
         }
+
+        postService.updatePostView(postId);
 
         model.addAttribute("cafeId", cafeId);
         model.addAttribute("post", post);

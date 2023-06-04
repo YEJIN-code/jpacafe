@@ -1,6 +1,8 @@
 package jpaark.jpacafe.service;
 
+import jpaark.jpacafe.domain.Category;
 import jpaark.jpacafe.domain.Comment;
+import jpaark.jpacafe.domain.Post;
 import jpaark.jpacafe.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,14 @@ public class CommentService {
         commentRepository.save(comment);
 
         return comment.getId();
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = commentRepository.findOne(commentId);
+        if (comment != null) {
+            commentRepository.delete(comment);
+        }
     }
 
     // 게시물 id와 일치하는 모든 댓글 조회

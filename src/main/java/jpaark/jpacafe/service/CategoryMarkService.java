@@ -1,6 +1,5 @@
 package jpaark.jpacafe.service;
 
-import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.CategoryMark;
 import jpaark.jpacafe.domain.Post;
 import jpaark.jpacafe.repository.CategoryMarkRepository;
@@ -35,6 +34,14 @@ public class CategoryMarkService {
     }
 
     @Transactional
+    public void deleteCategoryMark(Long categoryMarkId) {
+        CategoryMark categoryMark = categoryMarkRepository.findOne(categoryMarkId);
+        if (categoryMark != null) {
+            categoryMarkRepository.delete(categoryMark);
+        }
+    }
+
+    @Transactional
     public CategoryMark updateCategoryMark(Long categoryMarkId, int newPostCount) {
         CategoryMark findCategoryMark = categoryMarkRepository.findOne(categoryMarkId);
         findCategoryMark.setNewPostCount(newPostCount);
@@ -42,7 +49,7 @@ public class CategoryMarkService {
         return findCategoryMark;
     }
 
-    public CategoryMark findOnd(Long categoryMarkId) {
+    public CategoryMark findOne(Long categoryMarkId) {
         return categoryMarkRepository.findOne(categoryMarkId);
     }
 
@@ -50,5 +57,12 @@ public class CategoryMarkService {
         return categoryMarkRepository.findByUserId(userId);
     }
 
+    public Long countByUserId(String userId) {
+        return categoryMarkRepository.countByUserId(userId);
+    }
+
+    public List<CategoryMark> findByUserIdAndCategoryId(String userId, Long categoryId) {
+        return categoryMarkRepository.findByUserIdAndCategoryId(userId, categoryId);
+    }
 
 }

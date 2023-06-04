@@ -3,6 +3,7 @@ package jpaark.jpacafe.domain;
 import jpaark.jpacafe.domain.Status.StatusSet;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Slf4j
 public class Category {
 
     @Id @GeneratedValue
@@ -49,5 +51,12 @@ public class Category {
         categoryMark.setCategory(this);
     }
 
+    public void setTotalPlus() {
+        this.setTotal(++this.total);
+    }
+
+    public void setTotalMinus() {
+        this.setTotal(--this.total);
+    }
 
 }

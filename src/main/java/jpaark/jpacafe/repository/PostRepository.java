@@ -82,6 +82,13 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public int totalPostsInCategory(Long categoryId) {
+        return em.createQuery("select count(p) from post p where p.category.id = :categoryId", Long.class)
+                .setParameter("category", categoryId)
+                .getSingleResult()
+                .intValue();
+    }
+
     public int newPostCountCal(Long categoryId) {
         LocalDate today = LocalDate.now();
 

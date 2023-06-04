@@ -321,20 +321,32 @@
 
 
                 <div th:each="comment : ${comments}">
-                    <!-- 댓글 내용 등 출력 -->
                     <ul>
-                        <li th:text="${comment.content}"></li>
+                        <li>
+                            <span th:text="${comment.member.nickname}"></span><br>
+                            <span th:text="${comment.content}"></span>
+                            <span class="cateDel" th:if="${member.grade.name == 'manager' || comment.member.id == member.id}"
+                                  th:onclick="|commentDelete(${comment.id}, ${post.id}, ${cafe.id})|"
+                                  style="cursor: pointer; color: red;">
+                                  &nbsp;&nbsp;&nbsp;&nbsp;삭제
+                            </span>
+                        </li>
                     </ul>
                 </div>
-                <!-- JavaScript 코드 -->
+
+
                 <script th:inline="javascript">
                     function toggleReplyForm(replyFormId) {
                         var replyForm = document.getElementById(replyFormId);
                         if (replyForm.classList.contains('hidden')) {
                             replyForm.classList.remove('hidden');
-
                         } else {
                             replyForm.classList.add('hidden');
+                        }
+                    }
+                     function commentDelete(commentId, postId, cafeId)  {
+                        if (confirm('comment를 삭제하시겠습니까?')) {
+                            location.href = '/deleteComment?commentId=' + commentId + '&postId=' + postId + '&cafeId=' + cafeId;
                         }
                     }
                 </script>

@@ -1,9 +1,6 @@
 package jpaark.jpacafe.repository;
 
-import jpaark.jpacafe.domain.Cafe;
-import jpaark.jpacafe.domain.Category;
-import jpaark.jpacafe.domain.CategoryMark;
-import jpaark.jpacafe.domain.Users;
+import jpaark.jpacafe.domain.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,6 +16,10 @@ public class CategoryMarkRepository {
 
     public void save(CategoryMark categoryMark){
         em.persist(categoryMark);
+    }
+
+    public void delete(CategoryMark categoryMark) {
+        em.remove(categoryMark);
     }
 
     // 기본키로 찾기
@@ -38,6 +39,18 @@ public class CategoryMarkRepository {
                 .getResultList();
     }
 
+    public long countByUserId(String userId) {
+        return em.createQuery("select count(c) from CategoryMark c where c.user.id = :id", Long.class)
+                .setParameter("id", userId)
+                .getSingleResult();
+    }
+
+    public List<CategoryMark> findByUserIdAndCategoryId(String userId, Long categoryId) {
+        return em.createQuery("select c from CategoryMark c where c.user.id = :userId and c.category.id = :categoryId", CategoryMark.class)
+                .setParameter("userId", userId)
+                .setParameter("categoryId", categoryId)
+                .getResultList();
+    }
 
 
 }

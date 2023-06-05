@@ -1,53 +1,323 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header" />
+<head>
+  <meta charset="utf-8">
+  <link th:href="@{/css/bootstrap.min.css}"
+        href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+
 <style>
-.fieldError {
-    border-color: #bd2130;
-}
+    .cafe {
+        height: 30px;
+        text-align: center;
+    }
 
-.title-input {
-    width: 200px;
-}
+    .cafeInfo {
+        height: 20px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
 
-.container {
-    word-break: break-all;
-}
+    .write {
+        width: 20%;
+        height: 650px;
+        float: left;
+        margin-top : 30px;
+        border-color: darkgray;
+    }
+
+     .all-search {
+        width : 100%;
+        height: 30px;
+    }
+    .search {
+        float: right;
+        width: 400px;
+        margin-bottom: 30px;
+        height: 30px;
+    }
+
+
+    .btn-search {
+        float: right;
+        width: 20%;
+        height: 35px;
+    }
+
+    .input-keyword {
+        width: 65%;
+        height: 35px;
+        font-size: 10px;
+        border: 0;
+        border-radius: 5px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
+    }
+
+    .read {
+        height: 650px;
+        width: 80%;
+        float: right;
+        border-color: darkgray;
+        overflow-y: auto; /* 스크롤 추가 */
+    }
+
+    .footer {
+        height: 200px;
+        width: 100%;
+    }
+
+    .btn-home {
+        float: left;
+    }
+
+    .left {
+        margin-left: 50px;
+        float: left;
+    }
+
+    .cate {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .post {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .empty-Cate {
+        margin-top: 50px;
+    }
+
+    .profile {
+        height: 100px;
+        text-align: center;
+    }
+
+    .table-row:hover {
+      background-color: lightgray;
+      cursor: pointer;
+    }
+    .join {
+        margin-bottom: 10px;
+    }
 </style>
+
 <body>
-<div class="container">
-  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-
-  <form role="form"  th:object="${form}" method="post">
-
-    <div>
-      <div>카테고리</div>
-      <select id="categorySelect" name="category">
-        <option value="" th:selected="${post.category == null}">==카테고리 선택==</option>
-        <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}" th:selected="${category.name eq post.category.name}"></option>
-      </select>
-
-
-
+<div class="container" style="max-width: 900px">
+  <div>
+    <div class="py-5 text-center">
+      <h1>Cafe</h1>
+    </div>
+    <div class="cafe">
+      <h3 th:text="${cafe.name}">카페 이름</h3>
+    </div>
+    <div class="cafeInfo">
+      <h6 th:text="${cafe.info}">카페 설명</h6>
     </div>
 
-    <div class="form-group">
-      <label th:for="title">제목</label>
-      <input type="text" th:field="*{title}" class="form-control title-input" placeholder="제목을 입력하세요" style="width: 500px" th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'">
-      <p th:if="${#fields.hasErrors('title')}" th:errors="${#fields.errors('title')}">Incorrect name</p>
+    <!--  비회원에게 출력하는 요소-->
+    <div th:if="${member == null}">
+      <button class="w-100 btn btn-dark btn-lg join"
+              th:onclick="|location.href='/cafes/join?cafeId=${cafe.id}'|"
+              type="button">
+        카페 가입
+      </button>
+    </div>
+  </div>
+
+  <div class="all-search">
+    <div class="search">
+      <form th:action="@{/searchPost}" method="get">
+        <select id="searchOption" name="option">
+          <option value="all">전체</option>
+          <option value="title">제목</option>
+          <option value="content">내용</option>
+        </select>
+        <input class="input-keyword" type="text" id="searchInput" name="keyword"/>
+        <input type="hidden" name="cafeId" th:value="${cafe.id}"/>
+        <button class="btn-search btn btn-dark btn-lg" type="submit">검색</button>
+        <!--      옵션이랑 키워드 전달-->
+      </form>
+    </div>
+  </div>
+
+  <div class="cafeHome">
+    <div class="write">
+      <div class="profile">
+        <h4 th:text="${member != null ? member.nickname : 'Guest'}">Member Nickname</h4>
+        <h4 th:text="${grade.name}">등급명</h4>
+      </div>
+      <!--  회원에게 출력하는 요소-->
+      <p>멤버 수: <span th:text="${totalMember}"></span></p>
+      <div class="post" th:unless="${member == null}">
+        <button class="w-100 btn btn-dark btn-lg"
+                th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
+                type="button">
+          글쓰기
+        </button>
+
+        <div class="cate" th:if="${grade.name == 'manager'}">
+          <button class="w-100 btn btn-dark btn-lg"
+                  th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
+                  type="button">
+            카테고리 생성
+          </button>
+        </div>
+
+        <div class="cate" th:if="${grade.name == 'manager'}">
+          <button class="w-100 btn btn-dark btn-lg"
+                  th:onclick="|location.href='/cafes/memberList?cafeId=${cafe.id}'|"
+                  type="button">
+            멤버 목록
+          </button>
+        </div>
+
+      </div>
+
+      <div>
+  <span style="cursor: pointer; color: blue;"
+        th:text="전체게시물"
+        th:onclick="|location.href='/cafeHome?cafeId=${cafe.id}'|"
+        onmouseover="changeColor(this, 'red')"
+        onmouseout="changeColor(this, 'black')">
+  </span>
+      </div>
+      <div th:if="${not #lists.isEmpty(categories)}">
+        <ul>
+          <li th:each="category : ${categories}">
+            <span>
+                <span th:text="${category.name}"
+                      th:onclick="|location.href='@{/posts(categoryId=${category.id}, cafeId=${cafe.id})}'|"
+                      onmouseover="changeColor(this, 'red')"
+                      onmouseout="changeColor(this, 'black')">
+                </span>
+                <span class="cateDel" th:if="${grade.name == 'manager'}"
+                      th:onclick="|confirmDelete(${category.id}, ${cafe.id}, ${category.total})|"
+                      style="cursor: pointer; color: red;">
+                    -
+                </span>
+
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <script>
+    function changeColor(element, color) {
+        element.style.color = color;
+    }
+
+     function confirmDelete(categoryId, cafeId, categoryTotal)  {
+        if (categoryTotal > 0) {
+          alert("게시물이 존재하는 카테고리는 삭제할 수 없습니다!");
+        } else if (confirm('카테고리를 삭제하시겠습니까?')) {
+            // 예를 선택한 경우, categoryId를 컨트롤러로 전달
+            location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId + '&categoryTotal=' + categoryTotal;
+        }
+    }
+
+            </script>
+
+      <div th:if="${grade.categoryPermission == 'ON'}">
+        <p>카테고리 생성권한 없음</p>
+      </div>
+
+      <div class="empty-Cate" th:unless="${not #lists.isEmpty(categories)}">
+        <!-- 비어있는 경우에 실행될 내용 -->
+        <p>카테고리가 없습니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="read">
+    <form role="form"  th:object="${form}" method="post">
+
+      <div>
+        <div>카테고리</div>
+        <select id="categorySelect" name="category">
+          <option value="" th:selected="${post.category == null}">==카테고리 선택==</option>
+          <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}" th:selected="${category.name eq post.category.name}"></option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label th:for="title">제목</label>
+        <input type="text" th:field="*{title}" class="form-control title-input" placeholder="제목을 입력하세요" style="width: 500px" th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'">
+        <p th:if="${#fields.hasErrors('title')}" th:errors="${#fields.errors('title')}">Incorrect name</p>
+      </div>
+
+      <div class="form-group">
+        <label th:for="content">내용</label>
+        <textarea th:field="*{content}" class="form-control" placeholder="내용을 입력하세요" style="height: 350px" rows="4" wrap="soft"
+                  th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'"></textarea>
+        <p th:if="${#fields.hasErrors('content')}" th:errors="${#fields.errors('content')}">Incorrect name</p>
+      </div>
+
+      <button type="submit" class="btn btn-primary">글쓰기</button>
+    </form>
+    <br/>
+  </div>
+  <div class="footer">
+    <div class="btn-home">
+      <button class="btn btn-dark btn-lg" type="button"
+              onclick="location.href='/'">Home
+      </button>
+    </div>
+    <div class="left" th:if="${member != null and member.grade.name != 'manager'}">
+      <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+        <input type="hidden" name="memberId" th:value="${member.id}">
+        <button class="btn btn-dark btn-lg" type="submit">
+          카페 탈퇴
+        </button>
+      </form>
     </div>
 
-    <div class="form-group">
-      <label th:for="content">내용</label>
-      <textarea th:field="*{content}" class="form-control" placeholder="내용을 입력하세요" style="height: 350px" rows="4" wrap="soft"
-                th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'"></textarea>
-      <p th:if="${#fields.hasErrors('content')}" th:errors="${#fields.errors('content')}">Incorrect name</p>
+    <div class="left" th:if="${member != null and member.grade.name == 'manager'}">
+      <form th:action="@{/closeCafe}" method="post" onsubmit="return closeCafe(event)">
+        <input type="hidden" name="cafeId" th:value="${cafe.id}">
+        <button class="btn btn-dark btn-lg" type="submit">
+          아카이브 폐쇄
+        </button>
+      </form>
     </div>
 
-    <button type="submit" class="btn btn-primary">글쓰기</button>
-  </form>
-  <br/>
-  <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+    <script th:inline="javascript">
+            function confirmDeleteMember(event) {
+                if (!confirm('탈퇴하시겠습니까? 작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                showWithdrawalPopup();
+                return true;
+            }
+
+            function showWithdrawalPopup() {
+                alert('탈퇴되었습니다.');
+            }
+
+            function closeCafe(event) {
+            if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
+                event.preventDefault();
+                return false;
+            }
+
+            var totalMember = [[${totalMember}]];
+            if (totalMember > 1) {
+                alert('멤버가 존재하는 경우 폐쇄할 수 없습니다.');
+                event.preventDefault();
+                return false;
+            } else {
+                alert('아카이브가 사라집니다.');
+            }
+
+            return true;
+        }
+        </script>
+  </div>
+</div>
 </body>
 </html>

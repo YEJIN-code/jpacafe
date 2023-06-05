@@ -235,12 +235,12 @@
         <form role="form" action="/cafes/newCategory" th:object="${categoryForm}" method="post">
 
             <div class="form-group">
-                <label th:for="name">이름</label>
+                <label th:for="name">카테고리명</label>
                 <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요" th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
                 <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect name</p>
 
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">생성하기</button>
         </form>
     </div>
     <div class="footer">
@@ -249,7 +249,7 @@
                     onclick="location.href='/'">Home
             </button>
         </div>
-        <div class="left" th:unless="${member == null}">
+        <div class="left" th:if="${member != null and member.grade.name != 'manager'}">
             <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
                 <input type="hidden" name="memberId" th:value="${member.id}">
                 <button class="btn btn-dark btn-lg" type="submit">
@@ -258,23 +258,47 @@
             </form>
         </div>
 
-        <script th:inline="javascript">
+        <div class="left" th:if="${member != null and member.grade.name == 'manager'}">
+            <form th:action="@{/closeCafe}" method="post" onsubmit="return closeCafe(event)">
+                <input type="hidden" name="cafeId" th:value="${cafe.id}">
+                <button class="btn btn-dark btn-lg" type="submit">
+                    아카이브 폐쇄
+                </button>
+            </form>
+        </div>
 
+        <script th:inline="javascript">
             function confirmDeleteMember(event) {
-                if (!confirm('탈퇴하시겠습니까?')) {
-                    event.preventDefault(); // 폼 제출을 막습니다.
+                if (!confirm('탈퇴하시겠습니까? 작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
                     return false;
                 }
 
-                showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
+                showWithdrawalPopup();
                 return true;
             }
 
-            // 탈퇴되었습니다 팝업을 표시하는 함수
             function showWithdrawalPopup() {
                 alert('탈퇴되었습니다.');
             }
 
+            function closeCafe(event) {
+            if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
+                event.preventDefault();
+                return false;
+            }
+
+            var totalMember = [[${totalMember}]];
+            if (totalMember > 1) {
+                alert('멤버가 존재하는 경우 폐쇄할 수 없습니다.');
+                event.preventDefault();
+                return false;
+            } else {
+                alert('아카이브가 사라집니다.');
+            }
+
+            return true;
+        }
         </script>
     </div>
 </div>

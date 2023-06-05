@@ -77,8 +77,6 @@ public class MemberController {
         member.setNickname(form.getNickName());
         memberService.join(member);
 
-
-
         model.addAttribute("member", member);
         model.addAttribute("user", loginMember);
         model.addAttribute("cafeId", cafe.getId()); // cafeId를 모델에 추가
@@ -95,6 +93,16 @@ public class MemberController {
         memberService.deleteMember(memberId);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/cafes/compulsionDeleteMember")
+    public String compulsionDeleteMember(@RequestParam("memberId") Long memberId, @RequestParam("cafeId") Long cafeId,
+                               @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
+        log.info("memberController? Member id: {}", memberId); // 로그 추가
+        memberService.withdrawal(memberId);
+        memberService.deleteMember(memberId);
+
+        return "redirect:/cafes/memberList?cafeId=" + cafeId;
     }
 
     @GetMapping("/cafes/memberList")

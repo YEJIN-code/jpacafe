@@ -24,6 +24,7 @@ public class CafeHomeService {
         Cafe cafe = cafeService.findOne(cafeId); // cafeId로 Cafe 객체 조회
         List<Post> postList = postService.findByCafeId(cafeId);
         model.addAttribute("cafe", cafe);
+        model.addAttribute("totalMember", memberService.findAll(cafeId).size());
         model.addAttribute("posts", postList);
         List<Category> categories = categoryService.findAllByCafeId(cafeId);
         model.addAttribute("categories", categories);

@@ -151,6 +151,7 @@
                 <h4 th:text="${grade.name}">등급명</h4>
             </div>
             <!--  회원에게 출력하는 요소-->
+            <p>멤버 수: <span th:text="${totalMember}"></span></p>
             <div class="post" th:unless="${member == null}">
                 <button class="w-100 btn btn-dark btn-lg"
                         th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
@@ -158,8 +159,8 @@
                     글쓰기
                 </button>
 
-                <div class="cate" th:if="${grade.name == 'manager'}">
-                    <button class="w-100 btn btn-dark btn-lg"
+                <div class="cate" th:if="${grade.name == 'manager' or grade.name == 'staff'}">
+                <button class="w-100 btn btn-dark btn-lg"
                             th:onclick="|location.href='/cafes/newCategory?cafeId=${cafe.id}'|"
                             type="button">
                         카테고리 생성
@@ -217,7 +218,6 @@
             location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId + '&categoryTotal=' + categoryTotal;
         }
     }
-
             </script>
 
             <div th:if="${grade.categoryPermission == 'ON'}">
@@ -286,7 +286,6 @@
         </div>
 
         <script th:inline="javascript">
-
             function confirmDeleteMember(event) {
                 if (!confirm('탈퇴하시겠습니까? 작성한 게시물과 댓글은 삭제되지 않습니다.')) {
                     event.preventDefault();
@@ -302,21 +301,22 @@
             }
 
             function closeCafe(event) {
-                if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
-                    event.preventDefault();
-                    return false;
-                }
-
-                showWithdrawalPopup();
-                return true;
+            if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
+                event.preventDefault();
+                return false;
             }
 
-             function showWithdrawalPopup() {
+            var totalMember = [[${totalMember}]];
+            if (totalMember > 1) {
+                alert('멤버가 존재하는 경우 폐쇄할 수 없습니다.');
+                event.preventDefault();
+                return false;
+            } else {
                 alert('아카이브가 사라집니다.');
             }
 
-
-
+            return true;
+        }
         </script>
     </div>
 </div>

@@ -122,7 +122,10 @@ public class PostController {
     }
 
     @GetMapping("/modify/{postId}")
-    public String modifyPostForm(@PathVariable Long postId, Model model) {
+    public String modifyPostForm(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginMember,
+                                 @RequestParam("cafeId") Long cafeId,
+                                 @PathVariable Long postId, Model model) {
+        cafeHomeService.cafeHomeMethod(loginMember, model, cafeId);
 
         Post post = postService.findOne(postId);
         PostForm form = new PostForm();

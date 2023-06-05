@@ -135,6 +135,7 @@ public class PostController {
         List<Category> categories = post.getCafe().getCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("form", form);
+        model.addAttribute("post", post);
         return "cafes/modifyPost";
     }
 

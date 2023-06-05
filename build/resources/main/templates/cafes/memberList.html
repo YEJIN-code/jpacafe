@@ -235,18 +235,50 @@
             <table class="table table">
                 <thead>
                 <tr>
-                    <th style="width: 60%;">닉네임</th>
-                    <td style="width: 20%;">아이디</td>
+                    <th style="width: 20%;">닉네임</th>
+                    <td style="width: 15%;">아이디</td>
                     <td style="width: 20%;">등급명</td>
+                    <td style="width: 30%;">등급변경</td>
+                    <td style="width: 15%;">강제탈퇴</td>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="member : ${memberList}" class="table-row">
-                    <th style="width: 60%;" th:text="${member.nickname}">닉네임</th>
-                    <td style="width: 20%;" th:text="${member.user.id}">아이디</td>
+                    <th style="width: 20%;" th:text="${member.nickname}">닉네임</th>
+                    <td style="width: 15%;" th:text="${member.user.id}">아이디</td>
                     <td style="width: 20%;" th:text="${member.grade.name}">등급명</td>
 
+                    <td th:if="${member.grade.name != 'manager'}" style="width: 30%;">
+
+                        <select id="gradeSelect" style="margin-right: 5px;">
+                            <option value="staff">STAFF</option>
+                            <option value="normal">NORMAL</option>
+                        </select>
+                        <button class="btn btn-primary"
+                                th:data-member-id="${member.id}"
+                                th:data-cafe-id="${cafe.id}"
+                                onclick="changeGrade(this)">확인</button>
+                    </td>
+                    <td th:if="${member.grade.name != 'manager'}" style="width: 15%;">
+                        <button class="btn btn-danger" th:onclick="'forceWithdraw(\'' + ${member.id} + '\')'">추방</button>
+                    </td>
                 </tr>
+                <script>
+                function changeGrade(button) {
+                  var selectGrade = document.getElementById("gradeSelect").value;
+                  var memberId = button.getAttribute("data-member-id");
+                  var cafeId = button.getAttribute("data-cafe-id");
+
+                  var link = document.createElement("a");
+                  link.href = "/changeGrade?selectGrade=" + selectGrade + "&memberId=" + memberId + "&cafeId=" + cafeId;
+                   link.addEventListener("click", function() {
+                    var confirmationMessage = "변경되었습니다."; // 알림 메시지
+                    alert(confirmationMessage);
+                  });
+                  link.click();
+                                }
+                </script>
+
                 </tbody>
             </table>
         </div>

@@ -216,7 +216,6 @@
         if (categoryTotal > 0) {
           alert("게시물이 존재하는 카테고리는 삭제할 수 없습니다!");
         } else if (confirm('카테고리를 삭제하시겠습니까?')) {
-            // 예를 선택한 경우, categoryId를 컨트롤러로 전달
             location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId + '&categoryTotal=' + categoryTotal;
         }
     }
@@ -313,16 +312,15 @@
     <script th:inline="javascript">
 
             function confirmDeleteMember(event) {
-                if (!confirm('탈퇴하시겠습니까?')) {
-                    event.preventDefault(); // 폼 제출을 막습니다.
+                if (!confirm('탈퇴하시겠습니까?  작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
                     return false;
                 }
 
-                showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
+                showWithdrawalPopup();
                 return true;
             }
 
-            // 탈퇴되었습니다 팝업을 표시하는 함수
             function showWithdrawalPopup() {
                 alert('탈퇴되었습니다.');
             }

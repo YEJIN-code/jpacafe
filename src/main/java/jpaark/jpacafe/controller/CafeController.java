@@ -52,9 +52,6 @@ public class CafeController {
         cafeService.join(cafe);
         model.addAttribute("cafe", cafe);
 
-        log.info("createCafe loginMember id = {}", loginMember.getId());
-
-
         Grade normalGrade = new Grade();
         normalGrade.setName("normal");
         normalGrade.setCafe(cafe);
@@ -62,6 +59,14 @@ public class CafeController {
         normalGrade.setCategoryPermission(StatusSet.OFF);
         normalGrade.setPostPermission(StatusSet.OFF);
         gradeService.join(normalGrade);
+
+        Grade staffGrade = new Grade();
+        staffGrade.setName("staff");
+        staffGrade.setCafe(cafe);
+        staffGrade.setCafePermission(StatusSet.OFF);
+        staffGrade.setCategoryPermission(StatusSet.ON);
+        staffGrade.setPostPermission(StatusSet.ON);
+        gradeService.join(staffGrade);
 
         Grade managerGrade = new Grade();
         managerGrade.setName("manager");
@@ -73,21 +78,16 @@ public class CafeController {
 
         Member member = new Member();
         member.setUser(loginMember);
-        log.info("member.setUser(loginMember) result = {}", member.getUser());
         member.setCafe(cafe);
         member.setGrade(managerGrade);
         member.setNickname(form.getNickName());
         memberService.join(member);
 
         model.addAttribute("member", member);
-
         model.addAttribute("user", loginMember);
-
         model.addAttribute("cafeId", cafe.getId()); // cafeId를 모델에 추가
 
-
         return "redirect:/cafeHome?cafeId=" + cafe.getId();
-
     }
 
     @GetMapping("/cafeHome")
@@ -95,24 +95,25 @@ public class CafeController {
             @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,
             Model model,
             @RequestParam(name = "cafeId") Long cafeId) {
-        log.info("cafeHome? cafeId: {}", cafeId); // 로그 추가
-        log.info("cafeHome? loginUser: {}", loginUser); // 로그 추가
 
         cafeHomeService.cafeHomeMethod(loginUser, model, cafeId);
-
 
         return "cafes/cafeHome";
     }
 
-
-
     @GetMapping("/search")
-    public String searchFunction(@RequestParam(name = "keyword") String keyword,
+    public String searchFunction(@RequestParam("keyword") String keyword,
                                  Model model) {
         List<Cafe> cafeList = cafeService.searchCafe(keyword);
         model.addAttribute("cafe", cafeList);
         return "cafes/search";
     }
 
+    @PostMapping("/closeCafe")
+    public String closeCafe(@RequestParam("cafeId") Long cafeId) {
+        cafeService.deleteCafe(cafeId);
+
+        return "redirect:/";
+    }
 
 }

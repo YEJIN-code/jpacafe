@@ -5,10 +5,7 @@ import jpaark.jpacafe.domain.Cafe;
 import jpaark.jpacafe.domain.Grade;
 import jpaark.jpacafe.domain.Member;
 import jpaark.jpacafe.domain.Users;
-import jpaark.jpacafe.service.CafeHomeService;
-import jpaark.jpacafe.service.CafeService;
-import jpaark.jpacafe.service.GradeService;
-import jpaark.jpacafe.service.MemberService;
+import jpaark.jpacafe.service.*;
 import jpaark.jpacafe.session.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +26,7 @@ public class MemberController {
     private final MemberService memberService;
     private final CafeService cafeService;
     private final CafeHomeService cafeHomeService;
+    private final PostService postService;
 
     @GetMapping("/member/{memberId}")
     public String getMemberDetails(@PathVariable Long memberId, Model model) {
@@ -60,8 +58,7 @@ public class MemberController {
     public String joinCafe(
             @Valid MemberForm form, BindingResult result, Model model,
             @RequestParam("cafeId") Long cafeId,
-            @SessionAttribute(name = "loginMember", required = false) Users loginMember
-    ) {
+            @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
 
         log.info("memberController? cafeId: {}", cafeId); // 로그 추가
         Cafe cafe = cafeService.findOne(cafeId);
@@ -94,11 +91,12 @@ public class MemberController {
     public String deleteMember(@RequestParam("memberId") Long memberId,
                                @SessionAttribute(name = "loginMember", required = false) Users loginMember) {
         log.info("memberController? Member id: {}", memberId); // 로그 추가
+        memberService.withdrawal(memberId);
         memberService.deleteMember(memberId);
-
 
         return "redirect:/";
     }
+
     @GetMapping("/cafes/memberList")
     public String memberList(@RequestParam("cafeId") Long cafeId,
                              @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Users loginUser,

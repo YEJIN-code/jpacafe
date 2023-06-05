@@ -64,6 +64,12 @@ public class PostRepository {
         }
     }
 
+    public List<Post> findByUserId(String userId) {
+        return em.createQuery("select p from Post p where p.user.id = :userId", Post.class)
+                .setParameter("userId", userId)
+                .getResultList();
+    }
+
     public List<Post> searchPostByTitle(String keyword) {
         return em.createQuery("SELECT p FROM Post p WHERE p.title LIKE CONCAT('%', :keyword, '%')", Post.class)
                 .setParameter("keyword", keyword)
@@ -98,5 +104,6 @@ public class PostRepository {
                 .getSingleResult()
                 .intValue();
     }
+
 
 }

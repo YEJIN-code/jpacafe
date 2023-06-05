@@ -23,9 +23,10 @@
     <div>
       <div>카테고리</div>
       <select id="categorySelect" name="category">
-        <option value="">==카테고리 선택==</option>
-        <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>
+        <option value="" th:selected="${post.category == null}">==카테고리 선택==</option>
+        <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}" th:selected="${category.name eq post.category.name}"></option>
       </select>
+
 
 
     </div>

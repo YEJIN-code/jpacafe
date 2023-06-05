@@ -51,6 +51,12 @@ public class PostService {
     }
 
     @Transactional
+    public void withdrawalPost(Long postId) {
+        Post findPost = postRepository.findOne(postId);
+        findPost.setWriter("(알수없음)");
+    }
+
+    @Transactional
     public void deletePost(Long postId) {
         Post post = postRepository.findOne(postId);
         if (post != null) {
@@ -90,6 +96,10 @@ public class PostService {
 
     public List<Post> findByAllKeyword(String keyword) {
         return postRepository.searchPostByAll(keyword);
+    }
+
+    public List<Post> findByUserId(String userId) {
+        return postRepository.findByUserId(userId);
     }
 
     public int totalPostInCategory(Long categoryId) {

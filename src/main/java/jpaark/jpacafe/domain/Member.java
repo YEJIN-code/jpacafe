@@ -29,7 +29,7 @@ public class Member {
     // 유저는 여러 카페를 가질 수 있음 -> 유저 클래스에서 카페는 manyToOne이 됨
     // 즉, 여러개가 꽂히는 곳
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
 //    @Column(unique = true)

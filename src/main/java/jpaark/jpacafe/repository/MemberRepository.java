@@ -1,6 +1,7 @@
 package jpaark.jpacafe.repository;
 
 import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,10 @@ public class MemberRepository {
 
     public void save(Member member){
         em.persist(member);
+    }
+
+    public void delete(Member member) {
+        em.remove(member);
     }
 
     public Member findByNickname(String nickname) {

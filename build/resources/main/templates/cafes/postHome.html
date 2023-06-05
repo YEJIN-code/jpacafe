@@ -312,7 +312,7 @@
                             <label th:for="content">댓글</label>
                             <input type="text" th:field="*{content}" class="form-control" style="width: 100%;"
                                    placeholder="댓글을 입력하세요"
-                                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+                                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'" required>
                             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect name</p>
                             <button type="submit" class="btn-search">저장</button>
                         </div>

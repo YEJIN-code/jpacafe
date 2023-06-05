@@ -111,6 +111,18 @@
         margin-left: 20px;
         float: right;
     }
+    ul {
+        counter-reset: li; /* Initiate a counter */
+        padding: 0;
+        width: 100%;
+    }
+    li {
+        list-style:none; /* Disable the normal item numbering */
+        position:relative; /* Create a positioning context */
+        margin:0 0 3px 2em; /* Give each list item a left margin to make room for the numbers */
+        padding:6px 18px; /* Add some spacing around the content */
+        background-color: lightcyan;
+    }
 </style>
 
 <body>

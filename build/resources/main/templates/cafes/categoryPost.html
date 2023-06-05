@@ -111,6 +111,18 @@
       height: 1000px;
       width: 100%;
     }
+    ul {
+      counter-reset: li; /* Initiate a counter */
+      padding: 0;
+      width: 100%;
+    }
+    li {
+      list-style:none; /* Disable the normal item numbering */
+      position:relative; /* Create a positioning context */
+      margin:0 0 3px 2em; /* Give each list item a left margin to make room for the numbers */
+      padding:6px 18px; /* Add some spacing around the content */
+      background-color: lightcyan;
+    }
 </style>
 
 <body>
@@ -182,7 +194,7 @@
         </select>
         <input class="input-keyword" type="text" id="searchInput" name="keyword" required/>
         <input type="hidden" name="cafeId" th:value="${cafe.id}"/>
-        <button class="btn-search" type="submit">검색</button>
+        <button class="btn-search btn btn-dark btn-lg" type="submit">검색</button>
         <!--      옵션이랑 키워드 전달-->
       </form>
     </div>

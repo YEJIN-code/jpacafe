@@ -121,13 +121,70 @@
     .join {
         margin-bottom: 10px;
     }
+    .top {
+        height: 70px;
+        position: relative;
+    }
+
+    .head {
+        float: right;
+        height: 30px;
+        width: 25%;
+        margin-top: 20px;
+    }
+
+    .left {
+        float: left;
+    }
+
     .btn-home {
-        margin-bottom: 5px;
+        margin-left: 20px;
+        float: right;
+    }
+    .footer {
+        height: 1000px;
+        width: 100%;
     }
 </style>
 
 <body>
 <div class="container" style="max-width: 900px">
+    <div class="top">
+        <div class="head">
+            <div class="btn-home">
+                <button class="btn btn-dark btn-lg" type="button"
+                        onclick="location.href='/'">Home
+                </button>
+            </div>
+            <div class="left" th:unless="${member == null}">
+                <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+                    <input type="hidden" name="memberId" th:value="${member.id}">
+                    <button class="btn btn-dark btn-lg" type="submit">
+                        카페 탈퇴
+                    </button>
+                </form>
+            </div>
+
+            <script th:inline="javascript">
+
+                function confirmDeleteMember(event) {
+                    if (!confirm('탈퇴하시겠습니까?')) {
+                        event.preventDefault(); // 폼 제출을 막습니다.
+                        return false;
+                    }
+
+                    showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
+                    return true;
+                }
+
+                // 탈퇴되었습니다 팝업을 표시하는 함수
+                function showWithdrawalPopup() {
+                    alert('탈퇴되었습니다.');
+                }
+
+            </script>
+        </div>
+    </div>
     <div>
         <div class="py-5 text-center">
             <h1>Cafe</h1>
@@ -281,12 +338,6 @@
                         xhr.send();
                     }
                 </script>
-                <div class="btn-home">
-                    <button class="w-100 btn btn-secondary btn-lg" type="button"
-                            onclick="location.href='/'">
-                        HOME
-                    </button>
-                </div>
                 <div class="modify" style="margin-bottom: 5px;"
                      th:if="${member.nickname == post.writer || member.grade.name == 'staff' || member.grade.name == 'manager'}">
                     <form th:action="@{/modify/{postId}(postId=${post.id})}" method="get">
@@ -352,6 +403,9 @@
                 </script>
             </div>
         </div>
+    </div>
+    <div class="footer">
+
     </div>
 </div>
 </body>

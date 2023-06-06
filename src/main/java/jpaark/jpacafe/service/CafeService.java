@@ -41,6 +41,14 @@ public class CafeService {
         }
     }
 
+    @Transactional
+    public void deleteCafe(Long cafeId) {
+        Cafe cafe = cafeRepository.findOne(cafeId);
+        if (cafe != null) {
+            cafeRepository.delete(cafe);
+        }
+    }
+
     // 카페 전체 조회
     public List<Cafe> findAll(Long cafeId) {
         return cafeRepository.findAll();

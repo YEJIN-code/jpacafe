@@ -1,7 +1,10 @@
 package jpaark.jpacafe.service;
 
 import jpaark.jpacafe.domain.Grade;
+import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.Post;
 import jpaark.jpacafe.repository.GradeRepository;
+import jpaark.jpacafe.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +17,7 @@ import java.util.List;
 public class GradeService {
 
     private final GradeRepository gradeRepository;
+    private final MemberRepository memberRepository;
 
     // 등급 생성
     @Transactional(readOnly = false) // 쓰기에는 readOnly true 이면 안되므로 다시 정의
@@ -30,7 +34,14 @@ public class GradeService {
 //        }
 //    }
 
+    @Transactional
+    public void changeGrade(String gradeName, Long memberId, Long cafeId) {
 
+        Grade grade = gradeRepository.findByCafeIdAndName(cafeId, gradeName);
+        Member member = memberRepository.findOne(memberId);
+
+        member.setGrade(grade);
+    }
 
     public List<Grade> findByCafeId(Long cafeId) {
         return gradeRepository.findByCafeId(cafeId);
@@ -46,5 +57,9 @@ public class GradeService {
 
     public List<Grade> findNormalGradesByCafeId(Long cafeId) {
         return gradeRepository.findNormalGradesByCafeId(cafeId);
+    }
+
+    public Grade findByCafeIdAndName(Long cafeId, String name) {
+        return gradeRepository.findByCafeIdAndName(cafeId, name);
     }
 }

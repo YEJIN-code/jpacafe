@@ -1,7 +1,11 @@
 package jpaark.jpacafe.service;
 
+import jpaark.jpacafe.domain.Category;
 import jpaark.jpacafe.domain.Member;
+import jpaark.jpacafe.domain.Post;
+import jpaark.jpacafe.domain.Users;
 import jpaark.jpacafe.repository.MemberRepository;
+import jpaark.jpacafe.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +20,9 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-
+    private final PostRepository postRepository;
+    private final PostService postService;
+    private final UserService userService;
 
     // 카페 멤버 가입
     @Transactional(readOnly = false) // 쓰기에는 readOnly true 이면 안되므로 다시 정의
@@ -47,6 +53,21 @@ public class MemberService {
 //            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
 //        }
 //    }
+
+    @Transactional
+    public void withdrawal(Long memberId) {
+        Member member = memberRepository.findOne(memberId);
+
+        if (member != null) {
+            memberRepository.delete(member);
+            Users user = userService.findOne(member.getUser().getId());
+            List<Post> postList = postService.findByUserId(user.getId());
+            for (int i = 0; i < postList.size(); i++) {
+                Post post = postList.get(i);
+                postService.withdrawalPost(post.getId());
+            }
+        }
+    }
 
 
     // 멤버 전체 조회

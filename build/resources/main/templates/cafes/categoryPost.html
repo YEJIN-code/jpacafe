@@ -207,6 +207,7 @@
         <h4 th:text="${grade.name}">등급명</h4>
       </div>
       <!--  회원에게 출력하는 요소-->
+      <p>멤버 수: <span th:text="${totalMember}"></span></p>
       <div class="post" th:unless="${member == null}">
         <button class="w-100 btn btn-dark btn-lg"
                 th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
@@ -269,7 +270,6 @@
         if (categoryTotal > 0) {
           alert("게시물이 존재하는 카테고리는 삭제할 수 없습니다!");
         } else if (confirm('카테고리를 삭제하시겠습니까?')) {
-            // 예를 선택한 경우, categoryId를 컨트롤러로 전달
             location.href = '/deleteCategory?categoryId=' + categoryId + '&cafeId=' + cafeId + '&categoryTotal=' + categoryTotal;
         }
     }
@@ -350,6 +350,26 @@
   </div>
   <div class="footer">
 
+<<<<<<< HEAD
+=======
+    <script th:inline="javascript">
+
+            function confirmDeleteMember(event) {
+                if (!confirm('탈퇴하시겠습니까?  작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                showWithdrawalPopup();
+                return true;
+            }
+
+            function showWithdrawalPopup() {
+                alert('탈퇴되었습니다.');
+            }
+
+        </script>
+>>>>>>> 983f8596f53af348d5bd4693de120b90dd9f8cc8
   </div>
 </div>
 </body>

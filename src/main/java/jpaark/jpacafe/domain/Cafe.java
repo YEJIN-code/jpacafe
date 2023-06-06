@@ -16,22 +16,22 @@ public class Cafe {
     @Column(name = "cafe_id")
     private Long id;
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
     private List<Member> members = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe") // 카페에 게시판 리스트가 꽂힘
+    @OneToMany(mappedBy = "cafe", orphanRemoval = true) // 카페에 게시판 리스트가 꽂힘
     private List<Category> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
     private List<Sticker> stickers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
     private List<Grade> grades = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe")
+    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
     private List<CategoryMark> categoryMarks = new ArrayList<>();
 
 

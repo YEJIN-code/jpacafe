@@ -193,6 +193,7 @@
                 <h4 th:text="${grade.name}">등급명</h4>
             </div>
             <!--  회원에게 출력하는 요소-->
+            <p>멤버 수: <span th:text="${totalMember}"></span></p>
             <div class="post" th:unless="${member == null}">
                 <button class="w-100 btn btn-dark btn-lg"
                         th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
@@ -296,24 +297,121 @@
             <table class="table table">
                 <thead>
                 <tr>
-                    <th style="width: 60%;">닉네임</th>
-                    <td style="width: 20%;">아이디</td>
+                    <th style="width: 20%;">닉네임</th>
+                    <td style="width: 15%;">아이디</td>
                     <td style="width: 20%;">등급명</td>
+                    <td style="width: 30%;">등급변경</td>
+                    <td style="width: 15%;">강제탈퇴</td>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="member : ${memberList}" class="table-row">
-                    <th style="width: 60%;" th:text="${member.nickname}">닉네임</th>
-                    <td style="width: 20%;" th:text="${member.user.id}">아이디</td>
+                    <th style="width: 20%;" th:text="${member.nickname}">닉네임</th>
+                    <td style="width: 15%;" th:text="${member.user.id}">아이디</td>
                     <td style="width: 20%;" th:text="${member.grade.name}">등급명</td>
 
+                    <td th:if="${member.grade.name != 'manager'}" style="width: 30%;">
+
+                        <select id="gradeSelect" style="margin-right: 5px;">
+                            <option value="staff">STAFF</option>
+                            <option value="normal">NORMAL</option>
+                        </select>
+                        <button class="btn btn-primary"
+                                th:data-member-id="${member.id}"
+                                th:data-cafe-id="${cafe.id}"
+                                onclick="changeGrade(this)">확인</button>
+                    </td>
+                    <td th:if="${member.grade.name != 'manager'}" style="width: 15%;">
+                        <form th:action="@{/cafes/compulsionDeleteMember}" method="post" onsubmit="return compulsionDeleteMember(event)">
+                            <input type="hidden" name="memberId" th:value="${member.id}">
+                            <input type="hidden" name="cafeId" th:value="${cafe.id}">
+                            <button class="btn btn-red btn-lg" type="submit">
+                                추방
+                            </button>
+                        </form>
+                    </td>
                 </tr>
+                <script>
+                function changeGrade(button) {
+                  var selectGrade = document.getElementById("gradeSelect").value;
+                  var memberId = button.getAttribute("data-member-id");
+                  var cafeId = button.getAttribute("data-cafe-id");
+
+                  var link = document.createElement("a");
+                  link.href = "/changeGrade?selectGrade=" + selectGrade + "&memberId=" + memberId + "&cafeId=" + cafeId;
+                   link.addEventListener("click", function() {
+                    var confirmationMessage = "변경되었습니다."; // 알림 메시지
+                    alert(confirmationMessage);
+                  });
+                  link.click();
+                                }
+                </script>
+
                 </tbody>
             </table>
         </div>
     </div>
     <div class="footer">
+<<<<<<< HEAD
 
+=======
+        <div class="btn-home">
+            <button class="btn btn-dark btn-lg" type="button"
+                    onclick="location.href='/'">Home
+            </button>
+        </div>
+        <div class="left" th:if="${member != null and member.grade.name != 'manager'}">
+            <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+                <input type="hidden" name="memberId" th:value="${member.id}">
+                <button class="btn btn-dark btn-lg" type="submit">
+                    카페 탈퇴
+                </button>
+            </form>
+        </div>
+
+        <div class="left" th:if="${member != null and member.grade.name == 'manager'}">
+            <form th:action="@{/closeCafe}" method="post" onsubmit="return closeCafe(event)">
+                <input type="hidden" name="cafeId" th:value="${cafe.id}">
+                <button class="btn btn-dark btn-lg" type="submit">
+                    아카이브 폐쇄
+                </button>
+            </form>
+        </div>
+
+        <script th:inline="javascript">
+            function confirmDeleteMember(event) {
+                if (!confirm('탈퇴하시겠습니까? 작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                showWithdrawalPopup();
+                return true;
+            }
+
+            function showWithdrawalPopup() {
+                alert('탈퇴되었습니다.');
+            }
+
+            function closeCafe(event) {
+            if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
+                event.preventDefault();
+                return false;
+            }
+
+            var totalMember = [[${totalMember}]];
+            if (totalMember > 1) {
+                alert('멤버가 존재하는 경우 폐쇄할 수 없습니다.');
+                event.preventDefault();
+                return false;
+            } else {
+                alert('아카이브가 사라집니다.');
+            }
+
+            return true;
+        }
+        </script>
+>>>>>>> 983f8596f53af348d5bd4693de120b90dd9f8cc8
     </div>
 </div>
 </body>

@@ -43,20 +43,23 @@ public class GradeRepository {
                 .getResultList();
     }
 
-
     public List<Grade> findNormalGradesByCafeId(Long cafeId) {
-
-        String jpql = "SELECT g FROM Grade g " +
-                "WHERE g.cafe.id = :cafeId AND " +
-                "g.postPermission = 1 AND " +
-                "g.categoryPermission = 1 AND " +
-                "g.cafePermission = 1";
+        String jpql = "SELECT g FROM Grade g WHERE g.cafe.id = :cafeId AND g.postPermission = 1 AND " +
+                "g.categoryPermission = 1 AND g.cafePermission = 1";
 
         List<Grade> grades = em.createQuery(jpql, Grade.class)
                 .setParameter("cafeId", cafeId)
                 .getResultList();
 
         return grades;
+    }
+
+    public Grade findByCafeIdAndName(Long cafeId, String name) {
+        return em.createQuery("select g from Grade g where g.cafe.id = :cafeId and g.name = :name", Grade.class)
+                .setParameter("cafeId", cafeId)
+                .setParameter("name", name)
+                .getResultList()
+                .get(0);
     }
 
 

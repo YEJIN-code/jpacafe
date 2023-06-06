@@ -27,6 +27,7 @@ public class CommentRepository {
         return em.find(Comment.class, id);
     }
 
+
     public List<Comment> findByParentComment(Comment parentComment) {
         // 부모 댓글과 그 밑의 자식 댓글까지 모두 조회
         return em.createQuery("SELECT c FROM Comment c LEFT JOIN FETCH c.childComments WHERE c.parentComment IS NULL", Comment.class)

@@ -289,9 +289,7 @@
     </div>
 
     <div class="read">
-
         <form role="form" action="/cafes/newPost" th:object="${postForm}" method="post">
-
             <div>
                 <div>카테고리</div>
                 <select id="categorySelect" name="category" required>
@@ -319,7 +317,66 @@
 
     </div>
     <div class="footer">
+<<<<<<< HEAD
 
+=======
+        <div class="btn-home">
+            <button class="btn btn-dark btn-lg" type="button"
+                    onclick="location.href='/'">Home
+            </button>
+        </div>
+        <div class="left" th:if="${member != null and member.grade.name != 'manager'}">
+            <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+                <input type="hidden" name="memberId" th:value="${member.id}">
+                <button class="btn btn-dark btn-lg" type="submit">
+                    카페 탈퇴
+                </button>
+            </form>
+        </div>
+
+        <div class="left" th:if="${member != null and member.grade.name == 'manager'}">
+            <form th:action="@{/closeCafe}" method="post" onsubmit="return closeCafe(event)">
+                <input type="hidden" name="cafeId" th:value="${cafe.id}">
+                <button class="btn btn-dark btn-lg" type="submit">
+                    아카이브 폐쇄
+                </button>
+            </form>
+        </div>
+
+        <script th:inline="javascript">
+            function confirmDeleteMember(event) {
+                if (!confirm('탈퇴하시겠습니까? 작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                showWithdrawalPopup();
+                return true;
+            }
+
+            function showWithdrawalPopup() {
+                alert('탈퇴되었습니다.');
+            }
+
+            function closeCafe(event) {
+            if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
+                event.preventDefault();
+                return false;
+            }
+
+            var totalMember = [[${totalMember}]];
+            if (totalMember > 1) {
+                alert('멤버가 존재하는 경우 폐쇄할 수 없습니다.');
+                event.preventDefault();
+                return false;
+            } else {
+                alert('아카이브가 사라집니다.');
+            }
+
+            return true;
+        }
+        </script>
+>>>>>>> 983f8596f53af348d5bd4693de120b90dd9f8cc8
     </div>
 </div>
 </body>

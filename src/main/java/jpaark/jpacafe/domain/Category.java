@@ -18,14 +18,14 @@ public class Category {
     @Column(name = "category_id")
     private Long id;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<CategoryMark> categoryMarks = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     private String name;

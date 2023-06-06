@@ -34,7 +34,7 @@ public class Post {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

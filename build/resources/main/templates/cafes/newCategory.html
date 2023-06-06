@@ -289,12 +289,17 @@
         <form role="form" action="/cafes/newCategory" th:object="${categoryForm}" method="post">
 
             <div class="form-group">
+<<<<<<< HEAD
                 <label th:for="name">이름</label>
                 <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요" th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'" required>
+=======
+                <label th:for="name">카테고리명</label>
+                <input type="text" th:field="*{name}" class="form-control" placeholder="이름을 입력하세요" th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'">
+>>>>>>> 983f8596f53af348d5bd4693de120b90dd9f8cc8
                 <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Incorrect name</p>
 
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">생성하기</button>
         </form>
     </div>
     <div class="footer">

@@ -16,13 +16,13 @@ public class Users {
 
     private String name;
 
-    @OneToMany(mappedBy = "user",  fetch = FetchType.EAGER) // 일대다 관계이고 관계의 주인은 아님
+    @OneToMany(mappedBy = "user",  fetch = FetchType.EAGER, orphanRemoval = true) // 일대다 관계이고 관계의 주인은 아님
     private List<Member> members = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<CategoryMark> categoryMarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Shelf> shelves = new ArrayList<>();
 
     private String email;
@@ -30,10 +30,10 @@ public class Users {
     private LocalDate birthDate;
     // private profileImg; // 아직 안함
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<UserSticker> userStickers = new ArrayList<>();
 
     // 연관관계 매핑

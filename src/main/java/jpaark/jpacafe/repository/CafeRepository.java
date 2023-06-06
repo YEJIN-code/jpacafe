@@ -17,6 +17,10 @@ public class CafeRepository {
         em.persist(cafe);
     }
 
+    public void delete(Cafe cafe) {
+        em.remove(cafe);
+    }
+
     // 기본키로 찾기
     public Cafe findOne(Long id) {
         return em.find(Cafe.class, id);

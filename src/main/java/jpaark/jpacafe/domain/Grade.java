@@ -20,7 +20,7 @@ public class Grade {
     @JoinColumn(name = "cafe_id")
     private Cafe cafe;
 
-    @OneToMany(mappedBy = "grade")
+    @OneToMany(mappedBy = "grade", orphanRemoval = true)
     private List<Member> members = new ArrayList<>();
 
     private String name;

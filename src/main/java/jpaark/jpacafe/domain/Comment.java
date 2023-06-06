@@ -33,7 +33,7 @@ public class Comment {
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment; // 부모 댓글
 
-    @OneToMany(mappedBy = "parentComment")
+    @OneToMany(mappedBy = "parentComment", orphanRemoval = true)
     @GeneratedValue
     private List<Comment> childComments = new ArrayList<>(); // 자식 댓글들
 

@@ -263,6 +263,7 @@
                 </div>
             </div>
             <!--  회원에게 출력하는 요소-->
+            <p>멤버 수: <span th:text="${totalMember}"></span></p>
             <div class="post" th:unless="${member == null}">
                 <button class="w-100 btn btn-dark btn-lg"
                         th:onclick="|location.href='/cafes/newPost?cafeId=${cafe.id}'|"
@@ -387,9 +388,10 @@
                     }
                 </script>
                 <div class="modify" style="margin-bottom: 5px;"
-                     th:if="${member.nickname == post.writer || member.grade.name == 'staff' || member.grade.name == 'manager'}">
+                     th:if="${member.nickname == post.writer}">
                     <form th:action="@{/modify/{postId}(postId=${post.id})}" method="get">
                         <input type="hidden" name="postId" th:value="${post.id}">
+                        <input type="hidden" name="cafeId" th:value="${cafe.id}">
                         <button class="w-100 btn btn-dark btn-lg" type="submit">
                             수정
                         </button>

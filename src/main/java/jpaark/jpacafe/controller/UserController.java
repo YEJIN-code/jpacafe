@@ -2,9 +2,7 @@ package jpaark.jpacafe.controller;
 
 import jpaark.jpacafe.controller.form.LoginForm;
 import jpaark.jpacafe.controller.form.UserForm;
-import jpaark.jpacafe.domain.CategoryMark;
-import jpaark.jpacafe.domain.Member;
-import jpaark.jpacafe.domain.Users;
+import jpaark.jpacafe.domain.*;
 import jpaark.jpacafe.repository.CafeRepository;
 import jpaark.jpacafe.repository.MemberRepository;
 import jpaark.jpacafe.repository.UserRepository;
@@ -67,7 +65,6 @@ public class UserController {
         user.setName(form.getName());
         user.setEmail(form.getEmail());
         user.setBirthDate(form.getBirthDate());
-
         userService.join(user);
         return "redirect:/";
     }
@@ -123,8 +120,11 @@ public class UserController {
             buttonSize[i] = 0;
             log.info("cafeNameList.get() = {}", cafeNameList.get(i));
         }
-
         int size = markList.size();
+        List<Category> categories = new ArrayList<>();
+        List<Cafe> cafe = new ArrayList<>();
+
+
         log.info("markList.size = {}", size);
         for (int i = 0; i < size; i++) { // 즐찾 리스트 사이즈만큼 반복
 
@@ -133,13 +133,16 @@ public class UserController {
             cafeNameList.set(i, markList.get(i).getCafe().getName());
             categoryNameList.set(i, markList.get(i).getCategory().getName());
             buttonSize[i] = markList.get(i).getNewPostCount(); // 새 글 수 저장
-            if (buttonSize[i]>5) { // 새 글 수가 5를 넘으면
-                buttonSize[i] = 5; // 5로 맞춰줌
+            categories.add(markList.get(i).getCategory());
+            cafe.add(markList.get(i).getCafe());
+            if (buttonSize[i]>7) { // 새 글 수가 넘으면
+                buttonSize[i] = 7; // 맞춰줌
             }
             log.info("cafeNameList.get() = {}", cafeNameList.get(i));
             log.info("categoryNameList.get() = {}", categoryNameList.get(i));
 
         }
+
 
         log.info("buttonSize = {} {} {} {} {}",buttonSize[0], buttonSize[1], buttonSize[2], buttonSize[3], buttonSize[4]);
 
@@ -147,8 +150,9 @@ public class UserController {
         model.addAttribute("buttonSize", buttonSize);
         model.addAttribute("cafeNameList", cafeNameList);
         model.addAttribute("categoryNameList", categoryNameList);
+        model.addAttribute("categories", categories);
+        model.addAttribute("cafe", cafe);
 
-        model.addAttribute("markList", markList);
 
         return "/users/index"; // 원하는 경로로 변경
     }
@@ -189,8 +193,11 @@ public class UserController {
             buttonSize[i] = 0;
             log.info("cafeNameList.get() = {}", cafeNameList.get(i));
         }
-
         int size = markList.size();
+        List<Category> categories = new ArrayList<>();
+        List<Cafe> cafe = new ArrayList<>();
+
+
         log.info("markList.size = {}", size);
         for (int i = 0; i < size; i++) { // 즐찾 리스트 사이즈만큼 반복
 
@@ -199,12 +206,16 @@ public class UserController {
             cafeNameList.set(i, markList.get(i).getCafe().getName());
             categoryNameList.set(i, markList.get(i).getCategory().getName());
             buttonSize[i] = markList.get(i).getNewPostCount(); // 새 글 수 저장
-            if (buttonSize[i]>5) { // 새 글 수가 5를 넘으면
-                buttonSize[i] = 5; // 5로 맞춰줌
+            categories.add(markList.get(i).getCategory());
+            cafe.add(markList.get(i).getCafe());
+            if (buttonSize[i]>7) { // 새 글 수가 넘으면
+                buttonSize[i] = 7; // 맞춰줌
             }
             log.info("cafeNameList.get() = {}", cafeNameList.get(i));
             log.info("categoryNameList.get() = {}", categoryNameList.get(i));
+
         }
+
 
         log.info("buttonSize = {} {} {} {} {}",buttonSize[0], buttonSize[1], buttonSize[2], buttonSize[3], buttonSize[4]);
 
@@ -212,6 +223,8 @@ public class UserController {
         model.addAttribute("buttonSize", buttonSize);
         model.addAttribute("cafeNameList", cafeNameList);
         model.addAttribute("categoryNameList", categoryNameList);
+        model.addAttribute("categories", categories);
+        model.addAttribute("cafe", cafe);
 
         return "/users/index";
     }

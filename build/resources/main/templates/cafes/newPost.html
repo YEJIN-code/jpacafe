@@ -135,7 +135,7 @@
                         onclick="location.href='/'">Home
                 </button>
             </div>
-            <div class="left" th:unless="${member == null}">
+            <div class="left" th:if="${member != null and member.grade.name != 'manager'}">
                 <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
                     <input type="hidden" name="memberId" th:value="${member.id}">
                     <button class="btn btn-dark btn-lg" type="submit">
@@ -144,24 +144,48 @@
                 </form>
             </div>
 
+            <div class="left" th:if="${member != null and member.grade.name == 'manager'}">
+                <form th:action="@{/closeCafe}" method="post" onsubmit="return closeCafe(event)">
+                    <input type="hidden" name="cafeId" th:value="${cafe.id}">
+                    <button class="btn btn-dark btn-lg" type="submit">
+                        아카이브 폐쇄
+                    </button>
+                </form>
+            </div>
+
             <script th:inline="javascript">
-
-                function confirmDeleteMember(event) {
-                    if (!confirm('탈퇴하시겠습니까?')) {
-                        event.preventDefault(); // 폼 제출을 막습니다.
-                        return false;
-                    }
-
-                    showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
-                    return true;
+            function confirmDeleteMember(event) {
+                if (!confirm('탈퇴하시겠습니까? 작성한 게시물과 댓글은 삭제되지 않습니다.')) {
+                    event.preventDefault();
+                    return false;
                 }
 
-                // 탈퇴되었습니다 팝업을 표시하는 함수
-                function showWithdrawalPopup() {
-                    alert('탈퇴되었습니다.');
-                }
+                showWithdrawalPopup();
+                return true;
+            }
 
-            </script>
+            function showWithdrawalPopup() {
+                alert('탈퇴되었습니다.');
+            }
+
+            function closeCafe(event) {
+            if (!confirm('아카이브를 폐쇄할까요? 멤버가 존재하는 경우 폐쇄할 수 없습니다.')) {
+                event.preventDefault();
+                return false;
+            }
+
+            var totalMember = [[${totalMember}]];
+            if (totalMember > 1) {
+                alert('멤버가 존재하는 경우 폐쇄할 수 없습니다.');
+                event.preventDefault();
+                return false;
+            } else {
+                alert('아카이브가 사라집니다.');
+            }
+
+            return true;
+        }
+        </script>
         </div>
     </div>
     <div>

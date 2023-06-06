@@ -13,7 +13,7 @@
     <h2>가입하기</h2>
     <div class="form-group">
       <label th:for="info">닉네임</label>
-      <input type="text" th:field="*{nickName}" class="form-control" placeholder="닉네임을 입력하세요" th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'">
+      <input type="text" th:field="*{nickName}" class="form-control" placeholder="닉네임을 입력하세요" th:class="${#fields.hasErrors('nickName')}? 'form-control fieldError' : 'form-control'" required>
       <p th:if="${#fields.hasErrors('nickName')}" th:errors="*{nickName}">Incorrect info</p>
     </div>
 

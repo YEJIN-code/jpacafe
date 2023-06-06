@@ -61,6 +61,7 @@
         float: right;
         width: 50%;
         height: 35px;
+        margin-right: 20px;
     }
 
     table.td-cafe {
@@ -96,7 +97,7 @@
     <div class="top">
         <div class="search">
             <form th:action="@{/search}" method="get">
-                <input type="text" class="input-keyword" name="keyword" placeholder="검색어를 입력하세요"/>
+                <input type="text" class="input-keyword" name="keyword" placeholder="검색어를 입력하세요" required/>
                 <button type="submit" class="btn-search btn btn-dark btn-lg">검색</button>
             </form>
         </div>

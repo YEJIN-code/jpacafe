@@ -30,6 +30,7 @@
         width: 80%;
         float: right;
         border-color: darkgray;
+        overflow-y: auto; /* 스크롤 추가 */
     }
 
     .create-cate {
@@ -97,10 +98,11 @@
     }
 
     .comment-box {
-        height: 200px;
+        height: 500px;
     }
 
     .comment {
+        height: 50px;
         margin-top: 10px;
     }
 
@@ -108,26 +110,113 @@
         display: none;
     }
 
-    .btn-search {
-        background-color: black;
-        color: white;
-        float: right;
-        width: 20%;
-        height: 30px;
-        border: 0;
-        border-radius: 5px;
-        margin-top: 5px;
-    }
     .join {
         margin-bottom: 10px;
     }
+    .top {
+        height: 70px;
+        position: relative;
+    }
+
+    .head {
+        float: right;
+        height: 30px;
+        width: 25%;
+        margin-top: 20px;
+    }
+
+    .left {
+        float: left;
+    }
+
     .btn-home {
-        margin-bottom: 5px;
+        margin-left: 20px;
+        float: right;
+    }
+    .footer {
+        height: 1500px;
+        width: 100%;
+    }
+    ul {
+        counter-reset: li; /* Initiate a counter */
+        padding: 0;
+        width: 100%;
+    }
+    li {
+        list-style:none; /* Disable the normal item numbering */
+        position:relative; /* Create a positioning context */
+        margin:0 0 3px 2em; /* Give each list item a left margin to make room for the numbers */
+        padding:6px 18px; /* Add some spacing around the content */
+        background-color: lightcyan;
+    }
+    .all-search {
+        width : 100%;
+        height: 30px;
+    }
+    .search {
+        float: right;
+        width: 400px;
+        margin-bottom: 30px;
+        height: 30px;
+    }
+
+
+    .btn-search {
+        float: right;
+        width: 20%;
+        height: 35px;
+    }
+
+    .input-keyword {
+        width: 60%;
+        height: 35px;
+        font-size: 10px;
+        border: 0;
+        border-radius: 5px;
+        outline: none;
+        padding-left: 10px;
+        background-color: rgb(233, 233, 233);
     }
 </style>
 
 <body>
 <div class="container" style="max-width: 900px">
+    <div class="top">
+        <div class="head">
+            <div class="btn-home">
+                <button class="btn btn-dark btn-lg" type="button"
+                        onclick="location.href='/'">Home
+                </button>
+            </div>
+            <div class="left" th:unless="${member == null}">
+                <form th:action="@{/cafes/deleteMember}" method="post" onsubmit="return confirmDeleteMember(event)">
+                    <input type="hidden" name="memberId" th:value="${member.id}">
+                    <button class="btn btn-dark btn-lg" type="submit">
+                        카페 탈퇴
+                    </button>
+                </form>
+            </div>
+
+            <script th:inline="javascript">
+
+                function confirmDeleteMember(event) {
+                    if (!confirm('탈퇴하시겠습니까?')) {
+                        event.preventDefault(); // 폼 제출을 막습니다.
+                        return false;
+                    }
+
+                    showWithdrawalPopup(); // 탈퇴되었습니다 팝업을 표시합니다.
+                    return true;
+                }
+
+                // 탈퇴되었습니다 팝업을 표시하는 함수
+                function showWithdrawalPopup() {
+                    alert('탈퇴되었습니다.');
+                }
+
+            </script>
+        </div>
+    </div>
     <div>
         <div class="py-5 text-center">
             <h1>Cafe</h1>
@@ -146,6 +235,22 @@
                     type="button">
                 카페 가입
             </button>
+        </div>
+    </div>
+
+    <div class="all-search">
+        <div class="search">
+            <form th:action="@{/searchPost}" method="get">
+                <select id="searchOption" name="option">
+                    <option value="all">전체</option>
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                </select>
+                <input class="input-keyword" type="text" id="searchInput" name="keyword" required/>
+                <input type="hidden" name="cafeId" th:value="${cafe.id}"/>
+                <button class="btn-search btn btn-dark btn-lg" type="submit">검색</button>
+                <!--      옵션이랑 키워드 전달-->
+            </form>
         </div>
     </div>
 
@@ -282,12 +387,6 @@
                         xhr.send();
                     }
                 </script>
-                <div class="btn-home">
-                    <button class="w-100 btn btn-secondary btn-lg" type="button"
-                            onclick="location.href='/'">
-                        HOME
-                    </button>
-                </div>
                 <div class="modify" style="margin-bottom: 5px;"
                      th:if="${member.nickname == post.writer}">
                     <form th:action="@{/modify/{postId}(postId=${post.id})}" method="get">
@@ -310,13 +409,13 @@
                 <div class="comment" th:unless="${member == null}">
                     <form role="form" action="/comment" th:object="${commentForm}" method="post">
                         <input type="hidden" name="postId" th:value="${post.id}">
-                        <div class="form-group">
+                        <div>
                             <label th:for="content">댓글</label>
-                            <input type="text" th:field="*{content}" class="form-control" style="width: 100%;"
+                            <input type="text" th:field="*{content}" class="input-keyword"
                                    placeholder="댓글을 입력하세요"
-                                   th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'">
+                                    required>
                             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Incorrect name</p>
-                            <button type="submit" class="btn-search">저장</button>
+                            <button type="submit" class="btn-search btn btn-dark btn-lg">저장</button>
                         </div>
                     </form>
                 </div>
@@ -354,6 +453,9 @@
                 </script>
             </div>
         </div>
+    </div>
+    <div class="footer">
+
     </div>
 </div>
 </body>

@@ -22,8 +22,8 @@ public class Cafe {
     @OneToMany(mappedBy = "cafe", orphanRemoval = true) // 카페에 게시판 리스트가 꽂힘
     private List<Category> categories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
-    private List<Sticker> stickers = new ArrayList<>();
+//    @OneToMany(mappedBy = "cafe", orphanRemoval = true)
+//    private List<Sticker> stickers = new ArrayList<>();
 
     @OneToMany(mappedBy = "cafe", orphanRemoval = true)
     private List<Grade> grades = new ArrayList<>();
@@ -56,10 +56,10 @@ public class Cafe {
         category.setCafe(this);
     }
 
-    public void addSticker(Sticker sticker) {
-        stickers.add(sticker);
-        sticker.setCafe(this);
-    }
+//    public void addSticker(Sticker sticker) {
+//        stickers.add(sticker);
+//        sticker.setCafe(this);
+//    }
 
     public void addGrade(Grade grade) {
         grades.add(grade);

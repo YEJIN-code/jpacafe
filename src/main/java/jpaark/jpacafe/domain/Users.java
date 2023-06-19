@@ -32,9 +32,9 @@ public class Users {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<UserSticker> userStickers = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user", orphanRemoval = true)
+//    private List<UserSticker> userStickers = new ArrayList<>();
 
     // 연관관계 매핑
     public void addMember(Member member) {
@@ -52,10 +52,10 @@ public class Users {
         post.setUser(this);
     }
 
-    public void addStickerBook(UserSticker userSticker) {
-        userStickers.add(userSticker);
-        userSticker.setUser(this);
-    }
+//    public void addStickerBook(UserSticker userSticker) {
+//        userStickers.add(userSticker);
+//        userSticker.setUser(this);
+//    }
 
     public String getPassword() {
         return password;

@@ -1,18 +1,41 @@
-spring: #띄어쓰기 없음
-  datasource: #띄어쓰기 2칸
-    url: jdbc:h2:tcp://localhost/~/jpacafe #4칸
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+#spring: #띄어쓰기 없음
+#  datasource: #띄어쓰기 2칸
+#    url: jdbc:h2:tcp://localhost/~/jpacafe #4칸
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#
+#  jpa: #띄어쓰기 2칸
+#    hibernate: #띄어쓰기 4칸
+#      ddl-auto: create #띄어쓰기 6칸
+#    properties: #띄어쓰기 4칸
+#      hibernate: #띄어쓰기 6칸
+## show_sql: true #띄어쓰기 8칸
+#        format_sql: true #띄어쓰기 8칸
+#
+#logging.level: #띄어쓰기 없음
+#  org.hibernate.SQL: debug #띄어쓰기 2칸
+#  org.hibernate.type: trace #띄어쓰기 2칸
 
-  jpa: #띄어쓰기 2칸
-    hibernate: #띄어쓰기 4칸
-      ddl-auto: create #띄어쓰기 6칸
-    properties: #띄어쓰기 4칸
-      hibernate: #띄어쓰기 6칸
-# show_sql: true #띄어쓰기 8칸
-        format_sql: true #띄어쓰기 8칸
+# MySQL 설정
 
-logging.level: #띄어쓰기 없음
-  org.hibernate.SQL: debug #띄어쓰기 2칸
-  org.hibernate.type: trace #띄어쓰기 2칸
+server:
+  address: localhost
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jpacafedb?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useSSL=true
+    username: yejin
+    password: 1234
+
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
